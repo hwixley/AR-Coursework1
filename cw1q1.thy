@@ -65,8 +65,17 @@ lemma 7: "(\<forall>x. P x) \<longrightarrow> \<not>(\<exists>x. \<not>P x)"
   by assumption
 
 lemma 8: "P \<or> \<not>P"
+  apply(rule disjCI)
+  apply(rule ccontr)
+  apply(erule notE)
+  by assumption
 
 lemma 9: "\<not>\<not>P \<longrightarrow> P"
+  apply(rule impI)
+  apply(rule mp)
+   apply(rule impI)
+   apply auto
+  sorry
 
 lemma 10: "(\<not>P \<longrightarrow> P) \<longrightarrow> P"
 
