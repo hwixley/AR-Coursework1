@@ -33,19 +33,47 @@ lemma 4: "(\<exists>x. P x \<and> Q x) \<longrightarrow> (\<exists>x. P x) \<and
   by assumption
 
 lemma 5: "(\<not>(\<exists>x. \<not>P x) \<or> R) \<longrightarrow> ((\<exists>x. \<not>P x) \<longrightarrow> R)"
+  apply(rule impI)+
+  apply(erule disjE)
+   apply(erule exE)
+   apply(erule notE)
+   apply(rule exI)
+   apply(rule notI)
+   apply(erule notE)
+   apply(assumption)
+  apply(erule exE)
+  by assumption
 
-lemma 6: "(\<not>(\<exists>x. \<not>P x) V R) \<longrightarrow> ((\<exists>x. \<not>P x) \<longrightarrow> R)"
+lemma 6: "(\<not>(\<exists>x. \<not>P x) \<or> R) \<longrightarrow> ((\<exists>x. \<not>P x) \<longrightarrow> R)"
+  apply(rule impI)+
+  apply(erule disjE)
+  apply(erule exE)
+   apply(erule notE)
+   apply(rule exI)
+   apply(rule notI)
+   apply(erule notE)
+   apply(assumption)
+  apply(erule exE)
+  by assumption
 
-lemma 7:
+lemma 7: "(\<forall>x. P x) \<longrightarrow> \<not>(\<exists>x. \<not>P x)"
+  apply(rule impI)
+  apply(rule notI)
+  apply(erule exE)
+  apply(erule allE)
+  apply(erule notE)
+  by assumption
 
-lemma 8:
+lemma 8: "P \<or> \<not>P"
 
-lemma 9:
+lemma 9: "\<not>\<not>P \<longrightarrow> P"
 
-lemma 10:
+lemma 10: "(\<not>P \<longrightarrow> P) \<longrightarrow> P"
 
-lemma 11:
+lemma 11: "(\<not>P \<longrightarrow> False)\<longrightarrow>P"
 
-lemma 12:
+lemma 12: "(\<not>(\<forall>x. P x \<or> R x)) = (\<exists>x. \<not>P x \<and> \<not>R x)"
+
+lemma 13: "(\<exists>x. P x \<or> R x) = (\<not>((\<forall>x. \<not>P x) \<and> \<not>(\<exists>x. R x)))"
 
 end
