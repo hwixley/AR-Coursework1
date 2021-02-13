@@ -7,7 +7,9 @@ section \<open>Part 1\<close>
 (* 1 mark *)
 lemma disjunction_idempotence:
   "A \<or> A \<longleftrightarrow> A"
-oops
+  apply(rule mp)
+   apply(rule_tac P="A" in disjE)
+  oops
 
 (* 1 mark *)
 lemma conjunction_idempotence:
@@ -17,34 +19,65 @@ oops
 (* 1 mark *)
 lemma disjunction_to_conditional:
   "(\<not> P \<or> R) \<longrightarrow> (P \<longrightarrow> R)"
-oops
+  apply(rule impI)+
+  apply(erule disjE)
+   apply(erule notE)
+  by assumption
 
 (* 1 mark *)
 lemma
   "(\<exists>x. P x \<and> Q x) \<longrightarrow> (\<exists>x. P x) \<and> (\<exists>x. Q x)"
-oops
+  apply(rule impI)
+  apply(rule conjI)
+   apply(erule exE)+
+   apply(erule conjE)+
+   apply(rule exI)
+   apply(assumption)
+  apply(erule exE)
+  apply(erule conjE)
+  apply(rule exI)
+  by assumption
 
 (* 1 mark *)
 lemma
   "(\<not> (\<exists>x. \<not>P x) \<or> R) \<longrightarrow> ((\<exists>x. \<not> P x) \<longrightarrow> R)"
-oops
+  apply(rule impI)+
+  apply(erule disjE)
+   apply(erule exE)
+   apply(erule notE)
+   apply(rule exI)
+   apply(rule notI)
+   apply(erule notE)
+   apply(assumption)
+  apply(erule exE)
+  by assumption
 
 (* 2 marks *)
 lemma
   "(\<forall>x. P x) \<longrightarrow> \<not> (\<exists>x. \<not> P x)"            
-oops
+  apply(rule impI)
+  apply(rule notI)
+  apply(erule exE)
+  apply(erule allE)
+  apply(erule notE)
+  by assumption
 
 (* 3 marks *)
 text \<open>Prove using ccontr\<close>
 lemma excluded_middle:
   "P \<or> \<not> P"
-oops
+  apply(rule disjCI)
+  apply(rule ccontr)
+  apply(erule notE)
+  by assumption
 
 (* 3 marks *)
 text \<open>Prove using excluded middle\<close>
 lemma notnotD:
   "\<not>\<not> P \<Longrightarrow> P"
-oops
+  apply(rule notE)
+   apply auto
+  oops
 
 (* 3 marks *)
 text \<open>Prove using double-negation (rule notnotD)\<close>

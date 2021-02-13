@@ -75,24 +75,58 @@ lemma excluded_middle:
 text \<open>Prove using excluded middle\<close>
 lemma notnotD:
   "\<not>\<not> P \<Longrightarrow> P"
-oops
+  apply(rule notE)
+   apply auto
+  oops
 
 (* 3 marks *)
 text \<open>Prove using double-negation (rule notnotD)\<close>
 lemma classical:
   "(\<not> P \<Longrightarrow> P) \<Longrightarrow> P"
-oops
+  apply(rule notnotD)
+  apply(frule_tac P="P" in iffI)
+   apply(assumption)
+  apply(rule notI)
+  apply(erule notE)
+  oops
 
 (* 3 marks *)
 text \<open>Prove using classical\<close>
 lemma ccontr:
   "(\<not> P \<Longrightarrow> False) \<Longrightarrow> P"
-oops
+  apply(rule classical)
+  apply(frule_tac P="P" in iffI)
+   apply auto
+  oops
 
 (* 3 marks *)
 lemma
   "(\<not> (\<forall>x. P x \<or> R x)) = (\<exists>x. \<not> P x \<and> \<not> R x)"
-oops
+  apply(rule iffI)
+   apply(rule ccontr)
+   apply(erule notE)
+   apply(rule allI)
+   apply(rule ccontr)
+   apply(erule notE)
+   apply(rule_tac x="x" in exI)
+   apply(rule conjI)
+    apply(rule notI)
+    apply(erule notE)
+    apply(rule disjI1)
+    apply(assumption)
+   apply(rule notI)
+   apply(erule notE)
+   apply(rule disjI2)
+   apply(assumption)
+  apply(rule notI)
+  apply(erule exE)
+  apply(erule_tac x="x" in allE)
+  apply(erule conjE)
+  apply(erule disjE)
+   apply(erule notE)
+   apply(assumption)
+  apply(erule notE)+
+  by assumption
 
 (* 3 marks *)
 lemma
