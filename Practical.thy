@@ -131,7 +131,35 @@ lemma
 (* 3 marks *)
 lemma
   "(\<exists>x. P x \<or> R x) = (\<not>((\<forall>x. \<not> P x) \<and> \<not> (\<exists>x. R x)))"
-oops
+  apply(rule iffI)
+   apply(rule notI)
+   apply(erule exE)
+   apply(erule conjE)
+   apply(erule disjE)
+    apply(erule_tac x="x" in allE)
+    apply(erule notE)
+    apply(rule_tac x="x" in exI)
+    apply(erule notE)
+    apply(assumption)
+   apply(erule_tac x="x" in allE)
+   apply(erule notE)
+   apply(rule_tac x="x" in exI)
+   apply(assumption)
+  apply(rule ccontr)
+  apply(erule notE)
+  apply(rule conjI)
+   apply(rule allI)
+   apply(rule notI)
+   apply(erule notE)
+   apply(rule_tac x="x" in exI)
+   apply(rule disjI1)
+   apply(assumption)
+  apply(rule notI)
+  apply(erule notE)
+  apply(erule exE)
+  apply(rule_tac x="x" in exI)
+  apply(rule disjI2)
+  by assumption
 
 section \<open>Part 2.1\<close>
 
