@@ -81,7 +81,7 @@ lemma excluded_middle:
 text \<open>Prove using excluded middle\<close>
 lemma notnotD:
   "\<not>\<not> P \<Longrightarrow> P"
-  apply(rule notE)
+  apply(drule_tac P="P" in disjI2)
    apply auto
   oops
 
