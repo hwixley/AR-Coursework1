@@ -7,14 +7,20 @@ section \<open>Part 1\<close>
 (* 1 mark *)
 lemma disjunction_idempotence:
   "A \<or> A \<longleftrightarrow> A"
-  apply(rule mp)
-   apply(rule_tac P="A" in disjE)
-  oops
+  apply(rule iffI)
+   apply(erule disjE)
+    apply(assumption)+
+  apply(rule disjI1)
+  by assumption
 
 (* 1 mark *)
 lemma conjunction_idempotence:
   "A \<and> A \<longleftrightarrow> A"
-oops
+  apply(rule iffI)
+   apply(erule conjE)
+   apply(assumption)
+  apply(rule conjI)
+  by assumption
 
 (* 1 mark *)
 lemma disjunction_to_conditional:
