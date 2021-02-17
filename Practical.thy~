@@ -7,14 +7,20 @@ section \<open>Part 1\<close>
 (* 1 mark *)
 lemma disjunction_idempotence:
   "A \<or> A \<longleftrightarrow> A"
-  apply(rule mp)
-   apply(rule_tac P="A" in disjE)
-  oops
+  apply(rule iffI)
+   apply(erule disjE)
+    apply(assumption)+
+  apply(rule disjI1)
+  by assumption
 
 (* 1 mark *)
 lemma conjunction_idempotence:
   "A \<and> A \<longleftrightarrow> A"
-oops
+  apply(rule iffI)
+   apply(erule conjE)
+   apply(assumption)
+  apply(rule conjI)
+  by assumption
 
 (* 1 mark *)
 lemma disjunction_to_conditional:
@@ -66,16 +72,18 @@ lemma
 text \<open>Prove using ccontr\<close>
 lemma excluded_middle:
   "P \<or> \<not> P"
-  apply(rule disjCI)
   apply(rule ccontr)
-  apply(erule notE)
-  by assumption
+  apply(rule_tac P="P" and Q="P" in iffE)
+   apply(rule iffI)
+    apply(assumption)+
+   apply auto
 
 (* 3 marks *)
 text \<open>Prove using excluded middle\<close>
 lemma notnotD:
   "\<not>\<not> P \<Longrightarrow> P"
-  apply(rule notE)
+  apply(erule conjE)
+  apply(rule excluded_middle)
    apply auto
   oops
 
@@ -83,23 +91,81 @@ lemma notnotD:
 text \<open>Prove using double-negation (rule notnotD)\<close>
 lemma classical:
   "(\<not> P \<Longrightarrow> P) \<Longrightarrow> P"
-oops
+  apply(rule notnotD)
+  apply(rule iffE)
+  apply auto
+  oops
 
 (* 3 marks *)
 text \<open>Prove using classical\<close>
 lemma ccontr:
   "(\<not> P \<Longrightarrow> False) \<Longrightarrow> P"
-oops
+  apply(rule classical)
+  apply(frule_tac P="P" in iffI)
+   apply auto
+  oops
 
 (* 3 marks *)
 lemma
   "(\<not> (\<forall>x. P x \<or> R x)) = (\<exists>x. \<not> P x \<and> \<not> R x)"
-oops
+  apply(rule iffI)
+   apply(rule ccontr)
+   apply(erule notE)
+   apply(rule allI)
+   apply(rule ccontr)
+   apply(erule notE)
+   apply(rule_tac x="x" in exI)
+   apply(rule conjI)
+    apply(rule notI)
+    apply(erule notE)
+    apply(rule disjI1)
+    apply(assumption)
+   apply(rule notI)
+   apply(erule notE)
+   apply(rule disjI2)
+   apply(assumption)
+  apply(rule notI)
+  apply(erule exE)
+  apply(erule_tac x="x" in allE)
+  apply(erule conjE)
+  apply(erule disjE)
+   apply(erule notE)
+   apply(assumption)
+  apply(erule notE)+
+  by assumption
 
 (* 3 marks *)
 lemma
   "(\<exists>x. P x \<or> R x) = (\<not>((\<forall>x. \<not> P x) \<and> \<not> (\<exists>x. R x)))"
-oops
+  apply(rule iffI)
+   apply(rule notI)
+   apply(erule exE)
+   apply(erule conjE)
+   apply(erule disjE)
+    apply(erule_tac x="x" in allE)
+    apply(erule notE)
+    apply(rule_tac x="x" in exI)
+    apply(erule notE)
+    apply(assumption)
+   apply(erule_tac x="x" in allE)
+   apply(erule notE)
+   apply(rule_tac x="x" in exI)
+   apply(assumption)
+  apply(rule ccontr)
+  apply(erule notE)
+  apply(rule conjI)
+   apply(rule allI)
+   apply(rule notI)
+   apply(erule notE)
+   apply(rule_tac x="x" in exI)
+   apply(rule disjI1)
+   apply(assumption)
+  apply(rule notI)
+  apply(erule notE)
+  apply(erule exE)
+  apply(rule_tac x="x" in exI)
+  apply(rule disjI2)
+  by assumption
 
 section \<open>Part 2.1\<close>
 
