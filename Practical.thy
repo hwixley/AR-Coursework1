@@ -71,11 +71,12 @@ lemma
 text \<open>Prove using ccontr\<close>
 lemma excluded_middle:
   "P \<or> \<not> P"
-  apply(rule_tac P="P" and Q="P" in iffE)
-   apply(rule iffI)
-    apply(assumption)+
+  apply(cut_tac P="P" in excluded_middle)
+  apply(erule disjE)
+   apply(rule disjI2)
+   apply(assumption)
   apply(rule disjI1)
-   apply auto
+  by assumption
 
 (* 3 marks *)
 text \<open>Prove using excluded middle\<close>
