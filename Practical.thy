@@ -87,8 +87,14 @@ lemma excluded_middle:
 text \<open>Prove using excluded middle\<close>
 lemma notnotD:
   "\<not>\<not> P \<Longrightarrow> P"
-  apply(cut_tac P="P" in excluded_middle)
-  apply auto
+  apply(cut_tac P="P" and Q="P" in disjI1)
+   apply(cut_tac P="P" in excluded_middle)
+   apply(erule disjE)
+  apply(assumption)
+   apply(erule notE)
+   apply(assumption)
+  apply(erule disjE)
+  by assumption+
 
 (* 3 marks *)
 text \<open>Prove using double-negation (rule notnotD)\<close>
