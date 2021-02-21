@@ -100,8 +100,8 @@ lemma notnotD:
 text \<open>Prove using double-negation (rule notnotD)\<close>
 lemma classical:
   "(\<not> P \<Longrightarrow> P) \<Longrightarrow> P"
-  apply(rule_tac P="P" in notnotD)
-  apply(rule notI)
+  apply(cut_tac P="P" and Q="\<not>P" in impI)
+  apply(erule iffE)
   apply auto
   oops
 
