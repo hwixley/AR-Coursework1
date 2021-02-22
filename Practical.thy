@@ -100,9 +100,8 @@ lemma notnotD:
 text \<open>Prove using double-negation (rule notnotD)\<close>
 lemma classical:
   "(\<not> P \<Longrightarrow> P) \<Longrightarrow> P"
-  apply(cut_tac P="P" and Q="\<not>P" in impI)
-  apply(erule iffE)
-  apply auto
+  apply(frule_tac P="P" and Q="P" in impI)
+  apply(auto)
   oops
 
 (* 3 marks *)
@@ -184,22 +183,23 @@ begin
 
 (* 1 mark *)
 definition properpartof :: "'region \<Rightarrow> 'region \<Rightarrow> bool" (infix "\<sqsubset>" 100) where
-  "x \<sqsubset> y \<equiv> undefined"
+  "x \<sqsubset> y \<equiv> x \<sqsubseteq> y \<and> x \<noteq> y"
+
 
 (* 1 mark *)
 definition overlaps :: "'region \<Rightarrow> 'region \<Rightarrow> bool" (infix "\<frown>" 100) where
-  "x \<frown> y \<equiv> undefined"
+  "x \<frown> y \<equiv> \<exists>z. z \<sqsubseteq> x \<and> z \<sqsubseteq> y"
 
 definition disjoint :: "'region \<Rightarrow> 'region \<Rightarrow> bool" (infix "\<asymp>" 100) where
   "x \<asymp> y \<equiv> \<not> x \<frown> y"
 
 (* 1 mark *)
 definition partialoverlap :: "'region \<Rightarrow> 'region \<Rightarrow> bool" (infix "~\<frown>" 100) where
-  "x ~\<frown> y \<equiv> undefined"
+  "x ~\<frown> y \<equiv> x \<frown> y \<and> \<not>x \<sqsubseteq> y \<and> \<not>y \<sqsubseteq> x"
 
 (* 1 mark *)
 definition sumregions :: "'region set \<Rightarrow> 'region \<Rightarrow> bool" ("\<Squnion> _ _" [100, 100] 100) where
-  "\<Squnion> \<alpha> x \<equiv> undefined"
+  "\<Squnion> \<alpha> x \<equiv> (\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> x) \<and> (\<forall>y. y \<sqsubseteq> x \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z))"
 
 end
 
