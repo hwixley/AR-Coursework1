@@ -109,14 +109,11 @@ lemma classical:
 text \<open>Prove using classical\<close>
 lemma ccontr:
   "(\<not> P \<Longrightarrow> False) \<Longrightarrow> P"
-  apply(rule_tac P="P" and Q="P" in iffE)
-   apply(frule_tac P="P" in iffI)
-    apply(assumption)
-   apply(rule iffI)
-    apply(assumption)+
   apply(drule impI)
-  apply(erule mp)
+  apply(rule classical)
   apply(erule impE)
+   apply(assumption)
+  apply(erule notE)
    apply auto
   oops
 
@@ -223,7 +220,7 @@ section \<open>Part 2.2\<close>
 theorem overlaps_sym:
   "(x \<frown> y) = (y \<frown> x)"
 apply (unfold overlaps_def)
-oops
+  oops
 
 (* 1 mark *)
 theorem in_sum_set_partof:
