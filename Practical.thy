@@ -87,29 +87,36 @@ lemma excluded_middle:
 text \<open>Prove using excluded middle\<close>
 lemma notnotD:
   "\<not>\<not> P \<Longrightarrow> P"
-  apply(cut_tac P="P" and Q="P" in disjI1)
-   apply(cut_tac P="P" in excluded_middle)
+  apply(cut_tac P="P" in excluded_middle)
    apply(erule disjE)
   apply(assumption)
    apply(erule notE)
-   apply(assumption)
-  apply(erule disjE)
   by assumption+
 
 (* 3 marks *)
 text \<open>Prove using double-negation (rule notnotD)\<close>
 lemma classical:
   "(\<not> P \<Longrightarrow> P) \<Longrightarrow> P"
-  apply(frule_tac P="P" and Q="P" in impI)
-  apply(auto)
-  oops
+  apply(rule notnotD)
+  apply(drule impI)
+  apply(rule notI)
+  apply(erule impE)
+   apply(assumption)
+  apply(erule notE)
+  by assumption
 
 (* 3 marks *)
 text \<open>Prove using classical\<close>
 lemma ccontr:
   "(\<not> P \<Longrightarrow> False) \<Longrightarrow> P"
-  apply(rule classical)
-  apply(frule_tac P="P" in iffI)
+  apply(rule_tac P="P" and Q="P" in iffE)
+   apply(frule_tac P="P" in iffI)
+    apply(assumption)
+   apply(rule iffI)
+    apply(assumption)+
+  apply(drule impI)
+  apply(erule mp)
+  apply(erule impE)
    apply auto
   oops
 
