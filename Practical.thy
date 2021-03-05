@@ -212,7 +212,7 @@ end
 
 (* 1+1+1=3 marks *)
 locale mereology = partof +
-  assumes A1: "\<forall>xyz. x \<sqsubseteq> y \<and> y \<sqsubseteq> x \<longrightarrow> x \<sqsubseteq> z"
+  assumes A1: "\<forall>xyz. x \<sqsubseteq> y \<and> y \<sqsubseteq> z \<longrightarrow> x \<sqsubseteq> z"
       and A2: "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)"
       and A2': "\<forall>\<alpha>xy. \<Squnion> \<alpha> x \<and> \<Squnion> \<alpha> y \<longrightarrow> x = y"
 begin
@@ -222,7 +222,10 @@ section \<open>Part 2.2\<close>
 (* 2 marks *)
 theorem overlaps_sym:
   "(x \<frown> y) = (y \<frown> x)"
-apply (unfold overlaps_def)
+  apply(unfold overlaps_def)
+  apply(rule iffI)
+  apply(rule sym)
+  apply(auto)
   oops
 
 (* 1 mark *)
