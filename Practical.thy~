@@ -87,13 +87,10 @@ lemma excluded_middle:
 text \<open>Prove using excluded middle\<close>
 lemma notnotD:
   "\<not>\<not> P \<Longrightarrow> P"
-  apply(cut_tac P="P" and Q="P" in disjI1)
-   apply(cut_tac P="P" in excluded_middle)
+  apply(cut_tac P="P" in excluded_middle)
    apply(erule disjE)
   apply(assumption)
    apply(erule notE)
-   apply(assumption)
-  apply(erule disjE)
   by assumption+
 
 (* 3 marks *)
@@ -101,18 +98,22 @@ text \<open>Prove using double-negation (rule notnotD)\<close>
 lemma classical:
   "(\<not> P \<Longrightarrow> P) \<Longrightarrow> P"
   apply(rule notnotD)
-  apply(rule_tac P="\<not>\<not>P" and Q="P" in disjE)
-  apply(rule disjI1)
-  apply(frule_tac P="P" and Q="P" in iffI)
-  apply(auto)
-  oops
+  apply(drule impI)
+  apply(rule notI)
+  apply(erule impE)
+   apply(assumption)
+  apply(erule notE)
+  by assumption
 
 (* 3 marks *)
 text \<open>Prove using classical\<close>
 lemma ccontr:
   "(\<not> P \<Longrightarrow> False) \<Longrightarrow> P"
+  apply(drule impI)
   apply(rule classical)
-  apply(frule_tac P="P" in iffI)
+  apply(erule impE)
+   apply(assumption)
+  apply(erule notE)
    apply auto
   oops
 
@@ -219,7 +220,7 @@ section \<open>Part 2.2\<close>
 theorem overlaps_sym:
   "(x \<frown> y) = (y \<frown> x)"
 apply (unfold overlaps_def)
-oops
+  oops
 
 (* 1 mark *)
 theorem in_sum_set_partof:

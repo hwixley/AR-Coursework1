@@ -109,13 +109,16 @@ lemma classical:
 text \<open>Prove using classical\<close>
 lemma ccontr:
   "(\<not> P \<Longrightarrow> False) \<Longrightarrow> P"
-  apply(drule impI)
   apply(rule classical)
+  apply(drule impI)
   apply(erule impE)
    apply(assumption)
   apply(erule notE)
-   apply auto
-  oops
+  apply(cut_tac P="\<not>P" in notI)
+   apply(assumption)
+  apply(erule notE)
+  apply(rule notI)
+  by assumption
 
 (* 3 marks *)
 lemma
