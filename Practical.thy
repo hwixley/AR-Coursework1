@@ -240,8 +240,9 @@ theorem overlaps_sym:
   by assumption
 
 (* 1 mark *)
-theorem in_sum_set_partof:
-  "undefined"
+theorem in_sum_set_partof: 
+  "x \<sqsubseteq> y \<and> x \<sqsubseteq> z \<Longrightarrow> \<Squnion> \<alpha> x"
+
 oops
 
 (* 3 marks *)
