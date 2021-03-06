@@ -241,18 +241,19 @@ theorem overlaps_sym:
 
 (* 1 mark *)
 theorem in_sum_set_partof: 
-  "x \<sqsubseteq> y \<and> x \<sqsubseteq> z \<Longrightarrow> \<Squnion> \<alpha> x"
+  "\<forall>x. x \<sqsubseteq> y \<and> x \<sqsubseteq> z \<and> z \<in> \<alpha> \<and> y \<in> \<alpha> \<longrightarrow> \<Squnion> \<alpha> x"
 
 oops
 
 (* 3 marks *)
 theorem overlaps_refl:
-  "undefined"
+  "\<forall>x. x \<in> \<alpha> \<longrightarrow> x \<frown> x"
 oops
 
 (* 1 mark *)
 theorem all_has_partof:
-  "undefined"
+  "\<forall>x. \<exists>y. x \<sqsubseteq> y"
+proof(rule allI)
 oops
 
 (* 2 marks *)
