@@ -224,23 +224,36 @@ theorem overlaps_sym:
   "(x \<frown> y) = (y \<frown> x)"
   apply(unfold overlaps_def)
   apply(rule iffI)
-  apply(rule sym)
-  apply(auto)
-  oops
+  apply(erule exE)
+   apply(rule_tac x="z" in exI)
+   apply(rule conjI)
+    apply(erule conjE)
+    apply(assumption)
+   apply(erule conjE)
+   apply(assumption)
+  apply(erule exE)
+  apply(rule_tac x="z" in exI)
+  apply(rule conjI)
+   apply(erule conjE)
+   apply(assumption)
+  apply(erule conjE)
+  by assumption
 
 (* 1 mark *)
-theorem in_sum_set_partof:
-  "undefined"
+theorem in_sum_set_partof: 
+  "\<forall>x. x \<sqsubseteq> y \<and> x \<sqsubseteq> z \<and> z \<in> \<alpha> \<and> y \<in> \<alpha> \<longrightarrow> \<Squnion> \<alpha> x"
+
 oops
 
 (* 3 marks *)
 theorem overlaps_refl:
-  "undefined"
+  "\<forall>x. x \<in> \<alpha> \<longrightarrow> x \<frown> x"
 oops
 
 (* 1 mark *)
 theorem all_has_partof:
-  "undefined"
+  "\<forall>x. \<exists>y. x \<sqsubseteq> y"
+proof(rule allI)
 oops
 
 (* 2 marks *)
@@ -260,7 +273,9 @@ theorem sum_relation_is_same':
       and "\<And>f. y \<frown> f \<Longrightarrow> \<exists>g. r y g \<and> g \<frown> f"
       and "\<Squnion> {y} x"
   shows "\<Squnion> {k. r y k} x"
-oops
+proof -
+  let ?\<beta> = "{k. r y k}"
+  oops
 
 (* 1 mark *)
 theorem overlap_has_partof_overlap:
