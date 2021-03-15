@@ -241,11 +241,9 @@ theorem overlaps_sym:
 
 (* 1 mark *)
 theorem in_sum_set_partof: 
-  "\<forall>x. x \<in> \<alpha> \<longrightarrow> \<Squnion> \<alpha> z \<and> x \<sqsubseteq> z"
-proof (rule allI, rule impI, unfold sumregions_def)
-  assume "x \<in> \<alpha>" "(\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> x)"
-  show "\<forall>y. y \<sqsubseteq> x \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z)"
-  proof (rule impI)
+  "\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z \<longrightarrow> \<Squnion> \<alpha> z"
+proof (unfold sumregions_def)
+  assume "\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z" then have "\<forall>y. y \<sqsubseteq> z \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z)"
 oops
 
 (* 3 marks *)
@@ -287,9 +285,8 @@ proof -
 
 (* 1 mark *)
 theorem overlap_has_partof_overlap:
-"e \<frown> f \<longrightarrow> \<exists>z. z \<sqsubseteq> f \<and> z \<frown> f"
-  assumes "undefined"
-  shows "undefined"
+  assumes "e \<frown> f"
+  shows "\<exists>z. z \<sqsubseteq> e \<and> z \<frown> f"
 oops
 
 (* 1 marks *)
@@ -300,8 +297,8 @@ oops
 
 (* 5 marks *)
 theorem both_partof_eq:
-  assumes "undefined"
-  shows "undefined"
+  assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
+  shows "x = y"
 oops
 
 (* 4 marks *)
