@@ -241,7 +241,7 @@ theorem overlaps_sym:
 
 (* 1 mark *)
 theorem in_sum_set_partof: 
-  "\<forall>x. x \<in> \<alpha> \<longrightarrow> \<Squnion> \<alpha> x"
+  "\<forall>x. x \<in> \<alpha> \<longrightarrow> \<Squnion> \<alpha> z \<and> x \<sqsubseteq> z"
 proof (rule allI, rule impI, unfold sumregions_def)
   assume "x \<in> \<alpha>" "(\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> x)"
   show "\<forall>y. y \<sqsubseteq> x \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z)"
@@ -258,7 +258,7 @@ proof (unfold overlaps_def, rule allI, rule exI)
 
 (* 1 mark *)
 theorem all_has_partof:
-  "\<forall>x. \<exists>y. x \<sqsubseteq> y"
+  "\<forall>y. \<exists>x. x \<sqsubseteq> y"
 proof(rule allI)
 oops
 
@@ -272,7 +272,7 @@ proof (unfold overlaps_def, rule impI)
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "undefined"
+  "\<forall>z. z \<sqsubseteq> x \<longrightarrow> z \<in> \<alpha> \<and> \<Squnion> \<alpha> x"
 oops
 
 (* 2 marks *)
