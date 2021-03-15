@@ -87,32 +87,38 @@ lemma excluded_middle:
 text \<open>Prove using excluded middle\<close>
 lemma notnotD:
   "\<not>\<not> P \<Longrightarrow> P"
-  apply(cut_tac P="P" and Q="P" in disjI1)
-   apply(cut_tac P="P" in excluded_middle)
+  apply(cut_tac P="P" in excluded_middle)
    apply(erule disjE)
   apply(assumption)
    apply(erule notE)
-   apply(assumption)
-  apply(erule disjE)
   by assumption+
 
 (* 3 marks *)
 text \<open>Prove using double-negation (rule notnotD)\<close>
 lemma classical:
   "(\<not> P \<Longrightarrow> P) \<Longrightarrow> P"
-  apply(cut_tac P="P" and Q="\<not>P" in impI)
-  apply(erule iffE)
-  apply auto
-  oops
+  apply(rule notnotD)
+  apply(drule impI)
+  apply(rule notI)
+  apply(erule impE)
+   apply(assumption)
+  apply(erule notE)
+  by assumption
 
 (* 3 marks *)
 text \<open>Prove using classical\<close>
 lemma ccontr:
   "(\<not> P \<Longrightarrow> False) \<Longrightarrow> P"
   apply(rule classical)
-  apply(frule_tac P="P" in iffI)
-   apply auto
-  oops
+  apply(drule impI)
+  apply(erule impE)
+   apply(assumption)
+  apply(erule notE)
+  apply(cut_tac P="\<not>P" in notI)
+   apply(assumption)
+  apply(erule notE)
+  apply(rule notI)
+  by assumption
 
 (* 3 marks *)
 lemma
@@ -184,30 +190,31 @@ begin
 
 (* 1 mark *)
 definition properpartof :: "'region \<Rightarrow> 'region \<Rightarrow> bool" (infix "\<sqsubset>" 100) where
-  "x \<sqsubset> y \<equiv> undefined"
+  "x \<sqsubset> y \<equiv> x \<sqsubseteq> y \<and> x \<noteq> y"
+
 
 (* 1 mark *)
 definition overlaps :: "'region \<Rightarrow> 'region \<Rightarrow> bool" (infix "\<frown>" 100) where
-  "x \<frown> y \<equiv> undefined"
+  "x \<frown> y \<equiv> \<exists>z. z \<sqsubseteq> x \<and> z \<sqsubseteq> y"
 
 definition disjoint :: "'region \<Rightarrow> 'region \<Rightarrow> bool" (infix "\<asymp>" 100) where
   "x \<asymp> y \<equiv> \<not> x \<frown> y"
 
 (* 1 mark *)
 definition partialoverlap :: "'region \<Rightarrow> 'region \<Rightarrow> bool" (infix "~\<frown>" 100) where
-  "x ~\<frown> y \<equiv> undefined"
+  "x ~\<frown> y \<equiv> x \<frown> y \<and> \<not>x \<sqsubseteq> y \<and> \<not>y \<sqsubseteq> x"
 
 (* 1 mark *)
 definition sumregions :: "'region set \<Rightarrow> 'region \<Rightarrow> bool" ("\<Squnion> _ _" [100, 100] 100) where
-  "\<Squnion> \<alpha> x \<equiv> undefined"
+  "\<Squnion> \<alpha> x \<equiv> (\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> x) \<and> (\<forall>y. y \<sqsubseteq> x \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z))"
 
 end
 
 (* 1+1+1=3 marks *)
 locale mereology = partof +
-  assumes A1: "undefined"
-      and A2: "undefined"
-      and A2': "undefined"
+  assumes A1: "\<forall>x y z. x \<sqsubseteq> y \<and> y \<sqsubseteq> z \<longrightarrow> x \<sqsubseteq> z"
+      and A2: "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)"
+      and A2': "\<forall>\<alpha> x y. \<Squnion> \<alpha> x \<and> \<Squnion> \<alpha> y \<longrightarrow> x = y"
 begin
 
 section \<open>Part 2.2\<close>
@@ -215,33 +222,69 @@ section \<open>Part 2.2\<close>
 (* 2 marks *)
 theorem overlaps_sym:
   "(x \<frown> y) = (y \<frown> x)"
-apply (unfold overlaps_def)
-oops
+  apply(unfold overlaps_def)
+  apply(rule iffI)
+  apply(erule exE)
+   apply(rule_tac x="z" in exI)
+   apply(rule conjI)
+    apply(erule conjE)
+    apply(assumption)
+   apply(erule conjE)
+   apply(assumption)
+  apply(erule exE)
+  apply(rule_tac x="z" in exI)
+  apply(rule conjI)
+   apply(erule conjE)
+   apply(assumption)
+  apply(erule conjE)
+  by assumption
 
 (* 1 mark *)
-theorem in_sum_set_partof:
-  "undefined"
+theorem in_sum_set_partof: 
+  "\<forall>x. x \<in> \<alpha> \<and> x \<sqsubseteq> z \<longrightarrow> \<Squnion> \<alpha> z"
+proof (unfold sumregions_def)
+  fix x and y
+  assume "\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z"
+  show "\<forall>y. y \<sqsubseteq> z \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z)"
+    by blast
+proof(rule conjunct1)
 oops
 
 (* 3 marks *)
 theorem overlaps_refl:
-  "undefined"
-oops
+  "\<forall>x. x \<frown> x"
+proof
+  fix x
+  show "x \<frown> x" using overlaps_def by blast
+qed
+
+lemma "\<exists>x. x \<sqsubseteq> y"
+  apply(rule exI)
+  apply(auto)
 
 (* 1 mark *)
 theorem all_has_partof:
-  "undefined"
-oops
+  "\<exists>x. x \<sqsubseteq> y"
+proof -
+  assume "z = y"
+  show ?thesis by (rule iffE)
+    by blast
+qed
 
 (* 2 marks *)
 theorem partof_overlaps:
-  assumes "undefined"
-  shows "undefined"
-oops
+  assumes a: "z \<sqsubseteq> x \<and> x \<sqsubseteq> y"
+  shows "x \<frown> y"
+proof -
+  from a have "z \<sqsubseteq> y" using A1 by blast
+  moreover
+  from a have "z \<sqsubseteq> x" by simp
+  ultimately show "x \<frown> y" using overlaps_def by auto
+qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "undefined"
+  "\<forall>z. z \<sqsubseteq> x \<longrightarrow> z \<in> \<alpha> \<and> \<Squnion> \<alpha> x"
 oops
 
 (* 2 marks *)
@@ -250,12 +293,14 @@ theorem sum_relation_is_same':
       and "\<And>f. y \<frown> f \<Longrightarrow> \<exists>g. r y g \<and> g \<frown> f"
       and "\<Squnion> {y} x"
   shows "\<Squnion> {k. r y k} x"
-oops
+proof -
+  let ?\<beta> = "{k. r y k}"
+  oops
 
 (* 1 mark *)
 theorem overlap_has_partof_overlap:
-  assumes "undefined"
-  shows "undefined"
+  assumes "e \<frown> f"
+  shows "\<exists>z. z \<sqsubseteq> e \<and> z \<frown> f"
 oops
 
 (* 1 marks *)
@@ -266,8 +311,8 @@ oops
 
 (* 5 marks *)
 theorem both_partof_eq:
-  assumes "undefined"
-  shows "undefined"
+  assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
+  shows "x = y"
 oops
 
 (* 4 marks *)

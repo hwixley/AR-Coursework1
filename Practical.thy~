@@ -241,36 +241,46 @@ theorem overlaps_sym:
 
 (* 1 mark *)
 theorem in_sum_set_partof: 
-  "\<forall>x. x \<in> \<alpha> \<longrightarrow> \<Squnion> \<alpha> x"
-proof (rule allI, rule impI, unfold sumregions_def)
-  assume "x \<in> \<alpha>" "(\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> x)"
-  show "\<forall>y. y \<sqsubseteq> x \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z)"
-  proof (rule impI)
+  "\<forall>x. x \<in> \<alpha> \<and> x \<sqsubseteq> z \<longrightarrow> \<Squnion> \<alpha> z"
+proof (unfold sumregions_def)
+  fix x and y
+  assume "\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z"
+  show "\<forall>y. y \<sqsubseteq> z \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z)"
+    by blast
+proof(rule conjunct1)
 oops
 
 (* 3 marks *)
 theorem overlaps_refl:
   "\<forall>x. x \<frown> x"
-proof (unfold overlaps_def, rule allI, rule exI)
-  assume "z \<sqsubseteq> x"
-  show "z \<sqsubseteq> x \<and> z \<sqsubseteq> x" by(rule conjI)
-  oops
+proof
+  fix x
+  show "x \<frown> x" using overlaps_def by blast
+qed
 
 (* 1 mark *)
 theorem all_has_partof:
-  "\<forall>x. \<exists>y. x \<sqsubseteq> y"
-proof(rule allI)
-oops
+  "z \<sqsubseteq> y"
+proof -
+  assume "z = y"
+  show "y \<sqsubseteq> y"
+    by blast
+  oops
 
 (* 2 marks *)
 theorem partof_overlaps:
-  assumes "undefined"
-  shows "undefined"
-oops
+  assumes a: "z \<sqsubseteq> x \<and> x \<sqsubseteq> y"
+  shows "x \<frown> y"
+proof -
+  from a have "z \<sqsubseteq> y" using A1 by blast
+  moreover
+  from a have "z \<sqsubseteq> x" by simp
+  ultimately show "x \<frown> y" using overlaps_def by auto
+qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "undefined"
+  "\<forall>z. z \<sqsubseteq> x \<longrightarrow> z \<in> \<alpha> \<and> \<Squnion> \<alpha> x"
 oops
 
 (* 2 marks *)
@@ -285,9 +295,8 @@ proof -
 
 (* 1 mark *)
 theorem overlap_has_partof_overlap:
-"e \<frown> f \<longrightarrow> \<exists>z. z \<sqsubseteq> f \<and> z \<frown> f"
-  assumes "undefined"
-  shows "undefined"
+  assumes "e \<frown> f"
+  shows "\<exists>z. z \<sqsubseteq> e \<and> z \<frown> f"
 oops
 
 (* 1 marks *)
@@ -298,8 +307,8 @@ oops
 
 (* 5 marks *)
 theorem both_partof_eq:
-  assumes "undefined"
-  shows "undefined"
+  assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
+  shows "x = y"
 oops
 
 (* 4 marks *)
