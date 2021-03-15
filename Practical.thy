@@ -241,10 +241,12 @@ theorem overlaps_sym:
 
 (* 1 mark *)
 theorem in_sum_set_partof: 
-  "\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z \<longrightarrow> \<Squnion> \<alpha> z"
-proof (rule allI, rule impI, unfold sumregions_def, rule conjI)
-  assume "\<And>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z" then have "\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z"
-    by auto
+  "\<forall>x. x \<in> \<alpha> \<and> x \<sqsubseteq> z \<longrightarrow> \<Squnion> \<alpha> z"
+proof (unfold sumregions_def)
+  assume 0: "(\<forall>x. x \<in> \<alpha> \<and> x \<sqsubseteq> z) = (\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z)"
+  assume 1: "\<forall>x. x \<in> \<alpha> \<and> x \<sqsubseteq> z \<longrightarrow> (\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z) \<and> (\<forall>y. y \<sqsubseteq> z \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z))"
+  from 0 and 1 have "\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z \<longrightarrow> (\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z) \<and> (\<forall>y. y \<sqsubseteq> z \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z))"
+    by (auto)
 proof(rule conjunct1)
 oops
 
@@ -264,11 +266,15 @@ oops
 
 (* 2 marks *)
 theorem partof_overlaps:
-  assumes a: "z \<sqsubseteq> x \<and> x \<sqsubseteq> y \<longrightarrow> z \<sqsubseteq> y"
-    and b: "z \<sqsubseteq> x \<and> x \<sqsubseteq> y \<and> z \<sqsubseteq> y  \<longrightarrow> x \<frown> y"
-  shows "z \<sqsubseteq> x \<and> x \<sqsubseteq> y \<longrightarrow> x \<frown> y"
-proof (unfold overlaps_def, rule impI)
-  oops
+  assumes a: "z \<sqsubseteq> x \<and> x \<sqsubseteq> y"
+  shows "x \<frown> y"
+
+proof -
+  from a have "z \<sqsubseteq> y" using A1 by blast
+  moreover
+  from a have "z \<sqsubseteq> x" by simp
+  ultimately show "x \<frown> y" using overlaps_def by auto
+qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
