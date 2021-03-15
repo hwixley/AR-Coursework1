@@ -242,8 +242,10 @@ theorem overlaps_sym:
 (* 1 mark *)
 theorem in_sum_set_partof: 
   "\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z \<longrightarrow> \<Squnion> \<alpha> z"
-proof (unfold sumregions_def)
-  assume "\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z" then have "\<forall>y. y \<sqsubseteq> z \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z)"
+proof (rule allI, rule impI, unfold sumregions_def, rule conjI)
+  assume "\<And>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z" then have "\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z"
+    by auto
+proof(rule conjunct1)
 oops
 
 (* 3 marks *)
