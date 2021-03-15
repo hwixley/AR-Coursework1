@@ -241,14 +241,20 @@ theorem overlaps_sym:
 
 (* 1 mark *)
 theorem in_sum_set_partof: 
-  "\<forall>x. x \<sqsubseteq> y \<and> x \<sqsubseteq> z \<and> z \<in> \<alpha> \<and> y \<in> \<alpha> \<longrightarrow> \<Squnion> \<alpha> x"
-
+  "\<forall>x. x \<in> \<alpha> \<longrightarrow> \<Squnion> \<alpha> x"
+proof (rule allI, rule impI, unfold sumregions_def)
+  assume "x \<in> \<alpha>" "(\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> x)"
+  show "\<forall>y. y \<sqsubseteq> x \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z)"
+  proof (rule impI)
 oops
 
 (* 3 marks *)
 theorem overlaps_refl:
-  "\<forall>x. x \<in> \<alpha> \<longrightarrow> x \<frown> x"
-oops
+  "\<forall>x. x \<frown> x"
+proof (unfold overlaps_def, rule allI, rule exI)
+  assume "z \<sqsubseteq> x"
+  show "z \<sqsubseteq> x \<and> z \<sqsubseteq> x" by(rule conjI)
+  oops
 
 (* 1 mark *)
 theorem all_has_partof:
@@ -258,9 +264,11 @@ oops
 
 (* 2 marks *)
 theorem partof_overlaps:
-  assumes "undefined"
-  shows "undefined"
-oops
+  assumes a: "z \<sqsubseteq> x \<and> x \<sqsubseteq> y \<longrightarrow> z \<sqsubseteq> y"
+    and b: "z \<sqsubseteq> x \<and> x \<sqsubseteq> y \<and> z \<sqsubseteq> y  \<longrightarrow> x \<frown> y"
+  shows "z \<sqsubseteq> x \<and> x \<sqsubseteq> y \<longrightarrow> x \<frown> y"
+proof (unfold overlaps_def, rule impI)
+  oops
 
 (* 1 mark *)
 theorem sum_parts_eq:
@@ -279,6 +287,7 @@ proof -
 
 (* 1 mark *)
 theorem overlap_has_partof_overlap:
+"e \<frown> f \<longrightarrow> \<exists>z. z \<sqsubseteq> f \<and> z \<frown> f"
   assumes "undefined"
   shows "undefined"
 oops
