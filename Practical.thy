@@ -241,11 +241,11 @@ theorem overlaps_sym:
 
 (* 1 mark *)
 theorem in_sum_set_partof: 
-  "\<forall>x. x \<in> \<alpha> \<and> x \<sqsubseteq> w \<longrightarrow> \<Squnion> \<alpha> w"
-proof -
-  fix x assume "x \<in> \<alpha> \<and> x \<sqsubseteq> w"
-  show "\<Squnion> \<alpha> w"
-oops
+  "\<Squnion> {s} s \<longrightarrow> s \<sqsubseteq> s"
+proof
+  assume "\<Squnion> {s} s"
+  then show "s \<sqsubseteq> s" using sumregions_def by simp
+qed
 
 (* 3 marks *)
 theorem overlaps_refl:
@@ -293,7 +293,7 @@ proof -
 theorem overlap_has_partof_overlap:
   assumes a: "e \<frown> f"
   shows s: "\<exists>x. x \<sqsubseteq> e \<and> x \<frown> f"
-proof (unfold overlaps_def)
+proof (rule ccontr)
   from a have "\<exists>y. y \<sqsubseteq> e \<and> y \<sqsubseteq> f" using overlaps_def by simp
   then obtain 
 oops
