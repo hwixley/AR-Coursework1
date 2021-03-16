@@ -249,10 +249,10 @@ qed
 
 (* 3 marks *)
 theorem overlaps_refl:
-  "\<forall>x. x \<frown> x"
+  "x = y \<longrightarrow> x \<frown> y = y \<frown> x"
 proof
-  fix x
-  show "x \<frown> x" using overlaps_def by blast
+  assume "x = y"
+  then show "x \<frown> y = y \<frown> x" using sumregions_def by blast
 qed
 
 (* 1 mark *)
