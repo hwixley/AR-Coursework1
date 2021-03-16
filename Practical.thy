@@ -243,11 +243,9 @@ theorem overlaps_sym:
 theorem in_sum_set_partof: 
   "\<forall>x. x \<in> \<alpha> \<and> x \<sqsubseteq> z \<longrightarrow> \<Squnion> \<alpha> z"
 proof (unfold sumregions_def)
-  fix x and y
-  assume "\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z"
-  show "\<forall>y. y \<sqsubseteq> z \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z)"
-    by blast
-proof(rule conjunct1)
+  assume 0:"\<forall>x. x \<in> \<alpha> \<and> x \<sqsubseteq> z"
+  thus "(\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z) \<and> (\<forall>y. y \<sqsubseteq> z \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z))"
+  proof
 oops
 
 (* 3 marks *)
@@ -265,7 +263,7 @@ proof -
   assume "z = y"
   show ?thesis by (rule iffE)
     by blast
-qed
+  oops
 
 (* 2 marks *)
 theorem partof_overlaps:
@@ -295,8 +293,12 @@ proof -
 
 (* 1 mark *)
 theorem overlap_has_partof_overlap:
-  assumes "e \<frown> f"
-  shows "\<exists>z. z \<sqsubseteq> e \<and> z \<frown> f"
+  assumes a: "e \<frown> f"
+  shows s: "\<exists>x. x \<sqsubseteq> e \<and> x \<frown> f"
+proof (unfold overlaps_def)
+  from a have "\<exists>y. y \<sqsubseteq> e \<and> y \<sqsubseteq> f" using overlaps_def by simp
+
+  
 oops
 
 (* 1 marks *)
