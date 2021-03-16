@@ -276,7 +276,10 @@ qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "\<forall>z. z \<sqsubseteq> x \<longrightarrow> z \<in> \<alpha> \<and> \<Squnion> \<alpha> x"
+  "z \<sqsubseteq> x \<longrightarrow> z \<in> \<alpha> \<and> \<Squnion> \<alpha> x"
+proof
+  assume "z \<sqsubseteq> x"
+  then show "z \<in> \<alpha> \<and> \<Squnion> \<alpha> x" using sumregions_def and overlaps_def by try0
 oops
 
 (* 2 marks *)
