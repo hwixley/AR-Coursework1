@@ -252,15 +252,15 @@ theorem overlaps_refl:
   "x = y \<longrightarrow> x \<frown> y = y \<frown> x"
 proof
   assume "x = y"
-  then show "x \<frown> y = y \<frown> x" using sumregions_def by blast
+  then show "x \<frown> y = y \<frown> x" using sumregions_def by simp
 qed
 
 (* 1 mark *)
 theorem all_has_partof:
-  "\<exists>x. x \<sqsubseteq> y"
-proof (rule ccontr)
-  assume "\<nexists>x. x \<sqsubseteq> y"
-  show "False" using exE  by auto
+  "\<Squnion> \<alpha> y \<longrightarrow> x \<sqsubseteq> y"
+proof
+  assume "\<Squnion> \<alpha> y"
+  then show "x \<sqsubseteq> y" using sumregions_def by simp
 qed
 
 (* 2 marks *)
