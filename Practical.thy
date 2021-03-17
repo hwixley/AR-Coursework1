@@ -240,11 +240,16 @@ theorem overlaps_sym:
   by assumption
 
 (* 1 mark *)
-theorem in_sum_set_partof: 
-  "\<Squnion> {s} s \<longrightarrow> s \<sqsubseteq> s"
+theorem in_sum_set_partof:
+  "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<longrightarrow> m \<sqsubseteq> r"
 proof
-  assume "\<Squnion> {s} s"
-  then show "s \<sqsubseteq> s" using sumregions_def by simp
+  assume 9: "\<Squnion> \<alpha> r"
+  have 0: "\<Squnion> \<alpha> r \<longrightarrow> (\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> r)" using sumregions_def by simp
+  from 0 have 1: "\<Squnion> \<alpha> r \<longrightarrow> m \<in> \<alpha> \<and> m \<sqsubseteq> r" using allE by simp
+  from 1 have 2: "\<Squnion> \<alpha> r \<longrightarrow> m \<sqsubseteq> r" using conjE by simp
+  from 1 have 3: 
+  hence "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<longrightarrow> m \<sqsubseteq> r" by blast
+  show ?thesis
 qed
 
 (* 3 marks *)
@@ -276,10 +281,10 @@ qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "z \<sqsubseteq> x \<longrightarrow> z \<in> \<alpha> \<and> \<Squnion> \<alpha> x"
+  "y \<sqsubseteq> x \<longrightarrow> y \<in> \<alpha> \<and> \<Squnion> \<alpha> x"
 proof
-  assume "z \<sqsubseteq> x"
-  then show "z \<in> \<alpha> \<and> \<Squnion> \<alpha> x" using sumregions_def and overlaps_def by try0
+  assume "y \<sqsubseteq> x"
+  show "y \<in> \<alpha> \<and> \<Squnion> \<alpha> x" using sumregions_def by try0
 oops
 
 (* 2 marks *)
@@ -290,15 +295,17 @@ theorem sum_relation_is_same':
   shows "\<Squnion> {k. r y k} x"
 proof -
   let ?\<beta> = "{k. r y k}"
+  have 
   oops
 
 (* 1 mark *)
 theorem overlap_has_partof_overlap:
   assumes a: "e \<frown> f"
-  shows s: "\<exists>x. x \<sqsubseteq> e \<and> x \<frown> f"
-proof (rule ccontr)
-  from a have "\<exists>y. y \<sqsubseteq> e \<and> y \<sqsubseteq> f" using overlaps_def by simp
-  then obtain 
+  shows s: "x \<sqsubseteq> e \<and> x \<frown> f"
+proof
+  from a have b: "\<exists>y. y \<sqsubseteq> e \<and> y \<sqsubseteq> f" using overlaps_def by simp
+  from b have c: "x \<sqsubseteq> e \<and> x \<sqsubseteq> f" using sumregions_def by try0
+  ultimately show "x \<sqsubseteq> e \<and> x \<frown> f" by assumption
 oops
 
 (* 1 marks *)
@@ -312,7 +319,8 @@ theorem both_partof_eq:
   assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
   shows "x = y"
 proof -
-  from assms
+  from assms have "x \<sqsubseteq> x" using A1 by blast
+  moreover
 oops
 
 (* 4 marks *)
