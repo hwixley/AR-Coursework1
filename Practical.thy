@@ -277,10 +277,11 @@ qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "y \<sqsubseteq> x \<longrightarrow> y \<in> \<alpha> \<and> \<Squnion> \<alpha> x"
-proof
-  assume "y \<sqsubseteq> x"
-  show "y \<in> \<alpha> \<and> \<Squnion> \<alpha> x" using sumregions_def by try0
+  "p \<in> \<alpha> \<and> p \<sqsubseteq> x \<Longrightarrow> \<Squnion> \<alpha> x"
+proof -
+  have 0: "\<Squnion> \<alpha> x \<Longrightarrow>(\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> x)" using sumregions_def by simp
+  from 0 have 1: "\<Squnion> \<alpha> x \<Longrightarrow> p \<in> \<alpha> \<and> p \<sqsubseteq> x" using allE by blast
+  ultimately show "p \<in> \<alpha> \<and> p \<sqsubseteq> x \<Longrightarrow> \<Squnion> \<alpha> x" using sumregions_def by try0
 oops
 
 (* 2 marks *)
