@@ -243,13 +243,8 @@ theorem overlaps_sym:
 theorem in_sum_set_partof:
   "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<longrightarrow> m \<sqsubseteq> r"
 proof
-  assume 9: "\<Squnion> \<alpha> r"
-  have 0: "\<Squnion> \<alpha> r \<longrightarrow> (\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> r)" using sumregions_def by simp
-  from 0 have 1: "\<Squnion> \<alpha> r \<longrightarrow> m \<in> \<alpha> \<and> m \<sqsubseteq> r" using allE by simp
-  from 1 have 2: "\<Squnion> \<alpha> r \<longrightarrow> m \<sqsubseteq> r" using conjE by simp
-  from 1 have 3: 
-  hence "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<longrightarrow> m \<sqsubseteq> r" by blast
-  show ?thesis
+  have 0: "\<Squnion> \<alpha> r \<Longrightarrow> (\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> r)" using sumregions_def by simp
+  then show "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<Longrightarrow> m \<sqsubseteq> r" by simp
 qed
 
 (* 3 marks *)
