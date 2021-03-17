@@ -243,7 +243,7 @@ theorem overlaps_sym:
 theorem in_sum_set_partof:
   "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<longrightarrow> m \<sqsubseteq> r"
 proof
-  have 0: "\<Squnion> \<alpha> r \<Longrightarrow> (\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> r)" using sumregions_def by simp
+  have "\<Squnion> \<alpha> r \<Longrightarrow> (\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> r)" using sumregions_def by simp
   then show "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<Longrightarrow> m \<sqsubseteq> r" by simp
 qed
 
@@ -257,10 +257,11 @@ qed
 
 (* 1 mark *)
 theorem all_has_partof:
-  "\<Squnion> \<alpha> y \<longrightarrow> x \<sqsubseteq> y"
+  "\<Squnion> \<alpha> r \<longrightarrow> (\<exists>x. x \<sqsubseteq> r)"
 proof
-  assume "\<Squnion> \<alpha> y"
-  then show "x \<sqsubseteq> y" using sumregions_def by simp
+  have 0: "\<Squnion> \<alpha> r \<Longrightarrow> (\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> r)" using sumregions_def by simp
+  from 0 have 1: "\<Squnion> \<alpha> r \<Longrightarrow> y \<in> \<alpha> \<and>  y \<sqsubseteq> r" using allE by simp
+  from 1 show "\<Squnion> \<alpha> r \<Longrightarrow> (\<exists>x. x \<sqsubseteq> r)" using exE by blast
 qed
 
 (* 2 marks *)
