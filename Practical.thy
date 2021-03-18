@@ -257,10 +257,9 @@ qed
 
 (* 1 mark *)
 theorem all_has_partof:
-  "\<Squnion> \<alpha> r \<longrightarrow> (\<exists>x. x \<in> \<alpha> \<and> x \<sqsubseteq> r)"
+  "\<Squnion> \<alpha> r \<longrightarrow>  x \<in> \<alpha> \<and> x \<sqsubseteq> r"
 proof
-  have 0: "\<Squnion> \<alpha> r \<Longrightarrow> y \<in> \<alpha> \<and>  y \<sqsubseteq> r" using sumregions_def by simp
-  from 0 show "\<Squnion> \<alpha> r \<Longrightarrow> (\<exists>x. x \<in> \<alpha> \<and> x \<sqsubseteq> r)" using exE by auto
+  show "\<Squnion> \<alpha> r \<Longrightarrow> x \<in> \<alpha> \<and>  x \<sqsubseteq> r" using sumregions_def by simp
 qed
 
 (* 2 marks *)
