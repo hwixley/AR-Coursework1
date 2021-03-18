@@ -257,10 +257,10 @@ qed
 
 (* 1 mark *)
 theorem all_has_partof:
-  "\<Squnion> \<alpha> r \<longrightarrow> (\<exists>x. x \<sqsubseteq> r)"
+  "\<Squnion> \<alpha> r \<longrightarrow> (\<exists>x. x \<in> \<alpha> \<and> x \<sqsubseteq> r)"
 proof
   have 0: "\<Squnion> \<alpha> r \<Longrightarrow> y \<in> \<alpha> \<and>  y \<sqsubseteq> r" using sumregions_def by simp
-  from 0 show "\<Squnion> \<alpha> r \<Longrightarrow> (\<exists>x. x \<sqsubseteq> r)" using exE by auto
+  from 0 show "\<Squnion> \<alpha> r \<Longrightarrow> (\<exists>x. x \<in> \<alpha> \<and> x \<sqsubseteq> r)" using exE by auto
 qed
 
 (* 2 marks *)
@@ -276,11 +276,10 @@ qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "p \<in> \<alpha> \<and> p \<sqsubseteq> x \<Longrightarrow> \<Squnion> \<alpha> x"
+"\<And>z. z \<in> \<alpha> \<and> z \<sqsubseteq> x \<Longrightarrow> \<Squnion> \<alpha> x"
 proof -
-  have 0: "\<Squnion> \<alpha> x \<Longrightarrow>(\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> x)" using sumregions_def by simp
-  from 0 have 1: "\<Squnion> \<alpha> x \<Longrightarrow> p \<in> \<alpha> \<and> p \<sqsubseteq> x" using allE by blast
-  then show "p \<in> \<alpha> \<and> p \<sqsubseteq> x \<Longrightarrow> \<Squnion> \<alpha> x" using A2 by try0
+  have 1: "
+  show "y = x" using sumregions_def by try0
 oops
 
 (* 2 marks *)

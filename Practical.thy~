@@ -243,13 +243,8 @@ theorem overlaps_sym:
 theorem in_sum_set_partof:
   "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<longrightarrow> m \<sqsubseteq> r"
 proof
-  assume 9: "\<Squnion> \<alpha> r"
-  have 0: "\<Squnion> \<alpha> r \<longrightarrow> (\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> r)" using sumregions_def by simp
-  from 0 have 1: "\<Squnion> \<alpha> r \<longrightarrow> m \<in> \<alpha> \<and> m \<sqsubseteq> r" using allE by simp
-  from 1 have 2: "\<Squnion> \<alpha> r \<longrightarrow> m \<sqsubseteq> r" using conjE by simp
-  from 1 have 3: 
-  hence "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<longrightarrow> m \<sqsubseteq> r" by blast
-  show ?thesis
+  have "\<Squnion> \<alpha> r \<Longrightarrow> (\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> r)" using sumregions_def by simp
+  then show "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<Longrightarrow> m \<sqsubseteq> r" by simp
 qed
 
 (* 3 marks *)
@@ -262,10 +257,10 @@ qed
 
 (* 1 mark *)
 theorem all_has_partof:
-  "\<Squnion> \<alpha> y \<longrightarrow> x \<sqsubseteq> y"
+  "\<Squnion> \<alpha> r \<longrightarrow> (\<exists>x. x \<sqsubseteq> r)"
 proof
-  assume "\<Squnion> \<alpha> y"
-  then show "x \<sqsubseteq> y" using sumregions_def by simp
+  have 0: "\<Squnion> \<alpha> r \<Longrightarrow> y \<in> \<alpha> \<and>  y \<sqsubseteq> r" using sumregions_def by simp
+  from 0 show "\<Squnion> \<alpha> r \<Longrightarrow> (\<exists>x. x \<sqsubseteq> r)" using exE by auto
 qed
 
 (* 2 marks *)
@@ -281,10 +276,10 @@ qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "y \<sqsubseteq> x \<longrightarrow> y \<in> \<alpha> \<and> \<Squnion> \<alpha> x"
-proof
-  assume "y \<sqsubseteq> x"
-  show "y \<in> \<alpha> \<and> \<Squnion> \<alpha> x" using sumregions_def by try0
+  "p \<in> \<alpha> \<and> p \<sqsubseteq> x \<Longrightarrow> \<Squnion> \<alpha> x"
+proof -
+  have 0: "\<Squnion> \<alpha> x \<Longrightarrow> p \<in> \<alpha> \<and> p \<sqsubseteq> x" using sumregions_def by simp
+  then show "p \<in> \<alpha> \<and> p \<sqsubseteq> x \<Longrightarrow> \<Squnion> \<alpha> x" using classical by try0
 oops
 
 (* 2 marks *)
