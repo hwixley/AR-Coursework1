@@ -273,11 +273,12 @@ qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "\<Squnion> {z. z \<sqsubseteq> x} x"
+  "parts = {z. z \<sqsubseteq> x} \<Longrightarrow> \<Squnion> parts x"
 proof -
-  assume "\<And>z. z \<sqsubseteq> x"
-  then show "\<Squnion> {z. z \<sqsubseteq> x} x" by sledgehammer
-  oops
+  have 0: "parts \<noteq> {} \<Longrightarrow> (\<exists>z. \<Squnion> parts z)" using A2 by simp
+  from 0 show "parts = {z. z \<sqsubseteq> x} \<Longrightarrow> \<Squnion> parts x" 
+    by (metis (full_types) A2 empty_Collect_eq insert_not_empty partof.sumregions_def singletonD)
+qed
 
 (* 2 marks *)
 theorem sum_relation_is_same':
