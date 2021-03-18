@@ -257,10 +257,8 @@ qed
 
 (* 1 mark *)
 theorem all_has_partof:
-  "\<Squnion> \<alpha> r \<longrightarrow>  x \<in> \<alpha> \<and> x \<sqsubseteq> r"
-proof
-  show "\<Squnion> \<alpha> r \<Longrightarrow> x \<in> \<alpha> \<and>  x \<sqsubseteq> r" using sumregions_def by simp
-qed
+  "\<Squnion> \<alpha> r \<Longrightarrow> x \<in> \<alpha> \<and> x \<sqsubseteq> r"
+  using sumregions_def by simp
 
 (* 2 marks *)
 theorem partof_overlaps:
@@ -275,11 +273,11 @@ qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-"\<And>z. z \<in> \<alpha> \<and> z \<sqsubseteq> x \<Longrightarrow> \<Squnion> \<alpha> x"
+  "\<Squnion> {z. z \<sqsubseteq> x} x"
 proof -
-  have 1: "
-  show "y = x" using sumregions_def by try0
-oops
+  assume "\<And>z. z \<sqsubseteq> x"
+  then show "\<Squnion> {z. z \<sqsubseteq> x} x" by sledgehammer
+  oops
 
 (* 2 marks *)
 theorem sum_relation_is_same':

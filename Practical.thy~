@@ -257,10 +257,9 @@ qed
 
 (* 1 mark *)
 theorem all_has_partof:
-  "\<Squnion> \<alpha> r \<longrightarrow> (\<exists>x. x \<sqsubseteq> r)"
-proof
-  have 0: "\<Squnion> \<alpha> r \<Longrightarrow> y \<in> \<alpha> \<and>  y \<sqsubseteq> r" using sumregions_def by simp
-  from 0 show "\<Squnion> \<alpha> r \<Longrightarrow> (\<exists>x. x \<sqsubseteq> r)" using exE by auto
+  "\<Squnion> \<alpha> r \<Longrightarrow> x \<in> \<alpha> \<and> x \<sqsubseteq> r"
+proof -
+  show "\<Squnion> \<alpha> r \<Longrightarrow> x \<in> \<alpha> \<and>  x \<sqsubseteq> r" using sumregions_def by simp
 qed
 
 (* 2 marks *)
@@ -276,10 +275,11 @@ qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "p \<in> \<alpha> \<and> p \<sqsubseteq> x \<Longrightarrow> \<Squnion> \<alpha> x"
+  assumes "\<And>z. z \<sqsubseteq> x
+  shows "\<Squnion> {z. z \<sqsubseteq> x} x"
 proof -
-  have 0: "\<Squnion> \<alpha> x \<Longrightarrow> p \<in> \<alpha> \<and> p \<sqsubseteq> x" using sumregions_def by simp
-  then show "p \<in> \<alpha> \<and> p \<sqsubseteq> x \<Longrightarrow> \<Squnion> \<alpha> x" using classical by try0
+  have 0: "\<And>z. z \<sqsubseteq> x" by sledgehammer
+  from 0 show "\<Squnion> {z. z \<sqsubseteq> x} x" by sledgehammer
 oops
 
 (* 2 marks *)
