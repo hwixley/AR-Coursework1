@@ -275,9 +275,11 @@ qed
 theorem sum_parts_eq:
   "parts = {z. z \<sqsubseteq> x} \<Longrightarrow> \<Squnion> parts x"
 proof -
-  have 0: "parts \<noteq> {} \<Longrightarrow> \<Squnion> parts x" using A2
-  from 0 show "parts = {z. z \<sqsubseteq> x} \<Longrightarrow> \<Squnion> parts x"
-  oops
+  assume "parts \<noteq> {}"
+  have 0: "\<Squnion> {x} x" using sumregions_def by try0
+  from 0 have 1: "parts \<noteq> {} \<Longrightarrow> \<Squnion> parts x" using exI by blast
+  from 0 show "parts = {z. z \<sqsubseteq> x} \<Longrightarrow> \<Squnion> parts x" using  by blast
+qed
 
 (* 2 marks *)
 theorem sum_relation_is_same':
