@@ -249,10 +249,15 @@ qed
 
 (* 3 marks *)
 theorem overlaps_refl:
-  "x = y \<longrightarrow> x \<frown> y = y \<frown> x"
-proof
-  assume "x = y"
-  then show "x \<frown> y = y \<frown> x" using sumregions_def by simp
+(* "x = y \<longrightarrow> x \<frown> y = y \<frown> x" assume "x = y"
+  then show "x \<frown> y = y \<frown> x" using sumregions_def by simp*)
+
+  "\<Squnion> {x} x \<Longrightarrow> x \<frown> x"
+proof -
+  assume a: "\<Squnion> {x} x"
+  have 0: "\<Squnion> {x} x \<Longrightarrow> x \<sqsubseteq> x \<longrightarrow> x \<frown> x" using sumregions_def by simp
+  from 0 have 1: "\<Squnion> {x} x \<Longrightarrow> x \<frown> x" using impI by (simp add: sumregions_def)
+  then show "\<Squnion> {x} x \<Longrightarrow> x \<frown> x" using 0 by blast
 qed
 
 (* 1 mark *)
@@ -273,10 +278,11 @@ qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "\<Squnion> {p. p \<sqsubseteq> x} x"
+  "\<Squnion> {p. p \<sqsubseteq> x} y \<Longrightarrow> y = x"
 proof -
-  have 0: "\<Squnion> {p. p \<sqsubseteq> x} x \<Longrightarrow> (\<forall>y. y \<in> {p. p \<sqsubseteq> x} \<and> y \<sqsubseteq> x)" using sumregions_def by simp
-  from 0 then show "\<Squnion> {p. p \<sqsubseteq> x} x" using in_sum_set_partof by sledgehammer
+  assume a: "\<Squnion> {p. p \<sqsubseteq> x} y"
+  have 0: "\<Squnion> {p. p \<sqsubseteq> x} y \<Longrightarrow> (\<forall>y. y \<in> {p. p \<sqsubseteq> x} \<and>  y \<sqsubseteq> x)" using A2' by sledgehammer
+  show "\<Squnion> {p. p \<sqsubseteq> x} x" using A2 by blast
 qed
 
 (* 2 marks *)

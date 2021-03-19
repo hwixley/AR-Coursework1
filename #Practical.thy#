@@ -240,36 +240,30 @@ theorem overlaps_sym:
   by assumption
 
 (* 1 mark *)
-theorem in_sum_set_partof: 
-  "\<forall>x. x \<in> \<alpha> \<and> x \<sqsubseteq> z \<longrightarrow> \<Squnion> \<alpha> z"
-proof (unfold sumregions_def)
-  fix x and y
-  assume "\<forall>y. y \<in> \<alpha> \<and> y \<sqsubseteq> z"
-  show "\<forall>y. y \<sqsubseteq> z \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z)"
-    by blast
-proof(rule conjunct1)
-oops
+theorem in_sum_set_partof:
+  "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<longrightarrow> m \<sqsubseteq> r"
+proof
+  have "\<Squnion> \<alpha> r \<Longrightarrow> (\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> r)" using sumregions_def by simp
+  then show "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<Longrightarrow> m \<sqsubseteq> r" by simp
+qed
 
 (* 3 marks *)
 theorem overlaps_refl:
-  "\<forall>x. x \<frown> x"
-proof
-  fix x
-  show "x \<frown> x" using overlaps_def by blast
-qed
+(* "x = y \<longrightarrow> x \<frown> y = y \<frown> x" assume "x = y"
+  then show "x \<frown> y = y \<frown> x" using sumregions_def by simp*)
 
-lemma "\<exists>x. x \<sqsubseteq> y"
-  apply(rule exI)
-  apply(auto)
+  "\<Squnion> {x} x \<Longrightarrow> x \<frown> x"
+proof -
+  assume a: "\<Squnion> {x} x"
+  have 0: "\<Squnion> {x} x \<Longrightarrow> x \<sqsubseteq> x \<longrightarrow> x \<frown> x" using sumregions_def by simp
+  from 0 have 1: "\<Squnion> {x} x \<Longrightarrow> x \<frown> x" using impI by (simp add: sumregions_def)
+  then show "\<Squnion> {x} x \<Longrightarrow> x \<frown> x" using 0 by blast
+qed
 
 (* 1 mark *)
 theorem all_has_partof:
-  "\<exists>x. x \<sqsubseteq> y"
-proof -
-  assume "z = y"
-  show ?thesis by (rule iffE)
-    by blast
-qed
+  "\<Squnion> \<alpha> r \<Longrightarrow> x \<in> \<alpha> \<and> x \<sqsubseteq> r"
+  using sumregions_def by simp
 
 (* 2 marks *)
 theorem partof_overlaps:
@@ -284,8 +278,14 @@ qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "\<forall>z. z \<sqsubseteq> x \<longrightarrow> z \<in> \<alpha> \<and> \<Squnion> \<alpha> x"
-oops
+  "parts = {p. p \<sqsubseteq> x} \<Longrightarrow> \<Squnion> parts x"
+proof -
+  assume a: "parts = {p. p \<sqsubseteq> x}"
+  have 0: "\<Squnion> {p. p \<sqsubseteq> x} y \<Longrightarrow> (\<forall>y. y \<in> {p. p \<sqsubseteq> x} \<and>  y \<sqsubseteq> x)" using A2' 
+    by (simp add: sumregions_def)
+  from 0 have 1: "\<Squnion> {p. p \<sqsubseteq> x} y \<Longrightarrow> "
+  then show "parts = {p. p \<sqsubseteq> x} \<Longrightarrow> \<Squnion> parts x" using A2 by blast
+qed
 
 (* 2 marks *)
 theorem sum_relation_is_same':
@@ -295,12 +295,17 @@ theorem sum_relation_is_same':
   shows "\<Squnion> {k. r y k} x"
 proof -
   let ?\<beta> = "{k. r y k}"
+  have 
   oops
 
 (* 1 mark *)
 theorem overlap_has_partof_overlap:
-  assumes "e \<frown> f"
-  shows "\<exists>z. z \<sqsubseteq> e \<and> z \<frown> f"
+  assumes a: "e \<frown> f"
+  shows s: "x \<sqsubseteq> e \<and> x \<frown> f"
+proof
+  from a have b: "\<exists>y. y \<sqsubseteq> e \<and> y \<sqsubseteq> f" using overlaps_def by simp
+  from b have c: "x \<sqsubseteq> e \<and> x \<sqsubseteq> f" using sumregions_def by try0
+  ultimately show "x \<sqsubseteq> e \<and> x \<frown> f" by assumption
 oops
 
 (* 1 marks *)
@@ -313,6 +318,9 @@ oops
 theorem both_partof_eq:
   assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
   shows "x = y"
+proof -
+  from assms have "x \<sqsubseteq> x" using A1 by blast
+  moreover
 oops
 
 (* 4 marks *)
