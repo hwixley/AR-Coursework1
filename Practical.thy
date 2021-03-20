@@ -278,11 +278,10 @@ qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "\<Squnion> {p. p \<sqsubseteq> x} y \<Longrightarrow> y = x"
+  "{p. p \<sqsubseteq> x} \<noteq> {} \<Longrightarrow> \<Squnion> {p. p \<sqsubseteq> x} x"
 proof -
-  assume a: "\<Squnion> {p. p \<sqsubseteq> x} y"
-  have 0: "\<Squnion> {p. p \<sqsubseteq> x} y \<Longrightarrow> (\<forall>y. y \<in> {p. p \<sqsubseteq> x} \<and>  y \<sqsubseteq> x)" using A2' by sledgehammer
-  show "\<Squnion> {p. p \<sqsubseteq> x} x" using A2 by blast
+  have 0: " {p. p \<sqsubseteq> x} \<noteq> {} \<Longrightarrow> (\<exists>z. \<Squnion> {p. p \<sqsubseteq> x} z)" using A2 by simp
+  from 0 show "{p. p \<sqsubseteq> x} \<noteq> {} \<Longrightarrow> \<Squnion> {p. p \<sqsubseteq> x} x" using sumregions_def by auto
 qed
 
 (* 2 marks *)
