@@ -278,13 +278,10 @@ qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "parts = {p. p \<sqsubseteq> x} \<Longrightarrow> \<Squnion> parts x"
+  "{p. p \<sqsubseteq> x} \<noteq> {} \<Longrightarrow> \<Squnion> {p. p \<sqsubseteq> x} x"
 proof -
-  assume a: "parts = {p. p \<sqsubseteq> x}"
-  have 0: "\<Squnion> {p. p \<sqsubseteq> x} y \<Longrightarrow> (\<forall>y. y \<in> {p. p \<sqsubseteq> x} \<and>  y \<sqsubseteq> x)" using A2' 
-    by (simp add: sumregions_def)
-  from 0 have 1: "\<Squnion> {p. p \<sqsubseteq> x} y \<Longrightarrow> "
-  then show "parts = {p. p \<sqsubseteq> x} \<Longrightarrow> \<Squnion> parts x" using A2 by blast
+  have 0: " {p. p \<sqsubseteq> x} \<noteq> {} \<Longrightarrow> (\<exists>z. \<Squnion> {p. p \<sqsubseteq> x} z)" using A2 by simp
+  from 0 show "{p. p \<sqsubseteq> x} \<noteq> {} \<Longrightarrow> \<Squnion> {p. p \<sqsubseteq> x} x" using sumregions_def by auto
 qed
 
 (* 2 marks *)
@@ -295,8 +292,13 @@ theorem sum_relation_is_same':
   shows "\<Squnion> {k. r y k} x"
 proof -
   let ?\<beta> = "{k. r y k}"
-  have 
-  oops
+  assume a: "{k. r y k} \<noteq> {}"
+  have 0: "{k. r y k} \<noteq> {} \<Longrightarrow> \<Squnion> {k. r y k} x" using a sum_parts_eq by try0
+  have 0: "\<Squnion> {y} x \<Longrightarrow> y = x" using sumregions_def by force
+  from 0 have 1: "r y k \<Longrightarrow> k \<sqsubseteq> x" using assms by auto
+  from 1 have 2: "{k. r y k} = {k. k \<sqsubseteq> x}" 
+  from 2 have 3: "\<Squnion> {k. k \<sqsubseteq> x} x \<Longrightarrow> \<Squnion> {k. r y k} x" using blast
+  then show "\<Squnion> {k. r y k} x" by sledgehammer
 
 (* 1 mark *)
 theorem overlap_has_partof_overlap:
