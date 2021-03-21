@@ -333,24 +333,30 @@ oops
 
 (* 4 marks *)
 theorem sum_all_with_parts_overlapping:
-  assumes ""
-  shows "undefined"
+  assumes "\<Squnion> {z. \<forall>p. p \<sqsubseteq> z \<and> p \<frown> y} x"
+  shows "\<Squnion> {y} x"
 oops
 
 (* 2 marks *)
 theorem sum_one_is_self:
-  "undefined"
+  "\<Squnion> {x} x"
+proof -
+  assume "\<Squnion> {x} y"
+  have 0: "\<Squnion> {x} y \<Longrightarrow> x = y" using sumregions_def by fastforce
+  from 0 have 1: "\<Squnion> {x} y \<Longrightarrow> \<Squnion> {x} x" by blast
+  then show "\<Squnion> {x} x" by sledgehammer
 oops
 
 (* 2 marks *)
 theorem sum_all_with_parts_overlapping_self:
-  "undefined"
+  "\<Squnion> {z. \<forall>p. p \<sqsubseteq> z \<and> p \<frown>x} x"
+  by sledgehammer
 oops
 
 (* 4 marks *)
 theorem proper_have_nonoverlapping_proper:
-  assumes "undefined"
-  shows "undefined"
+  assumes "s \<sqsubset> r"
+  shows "\<exists>z. z \<sqsubset> r \<and> z \<asymp> s"
 oops
 
 (* 1 mark *)
