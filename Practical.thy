@@ -289,10 +289,14 @@ theorem sum_relation_is_same':
   shows "\<Squnion> {k. r y k} x"
 proof -
   let ?\<beta> = "{k. r y k}"
-  assume "\<Squnion> {k. k \<sqsubseteq> x} x"
+  let ?\<alpha> = "{k. k \<sqsubseteq> x}"
+  assume a: "\<Squnion> ?\<alpha> x"
   have 0: "r y k \<Longrightarrow> k \<sqsubseteq> x" using all_has_partof assms by blast
-  from 0 have 1: "\<Squnion> {k. k \<sqsubseteq> x} x \<Longrightarrow> \<Squnion> {k. r y k} x" by sledgehammer
-  then show "\<Squnion> {k. r y k} x" by sledgehammer
+  have 1: "z \<in> ?\<beta> \<Longrightarrow> z \<in> ?\<alpha>" using a all_has_partof by auto
+  have 2: "?\<beta> \<subseteq> ?\<alpha>" using a all_has_partof by blast
+  have 3: "x \<frown> f \<Longrightarrow> \<exists>g. r x g \<and> g \<frown> f"
+  using assms(2) assms(3) mereology.all_has_partof mereology_axioms by fastforce
+  then show "\<Squnion> ?\<beta> x" by sledgehammer
   oops
 
 (* 1 mark *)
@@ -305,7 +309,7 @@ theorem overlap_has_partof_overlap:
 theorem sum_parts_of_one_eq:
   assumes "\<Squnion> {x} x"
   shows "\<Squnion> {p. p \<sqsubseteq> x} x"
-oops
+  using assms sumregions_def by auto
 
 (* 5 marks *)
 theorem both_partof_eq:
