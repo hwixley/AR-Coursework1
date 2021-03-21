@@ -249,9 +249,6 @@ qed
 
 (* 3 marks *)
 theorem overlaps_refl:
-(* "x = y \<longrightarrow> x \<frown> y = y \<frown> x" assume "x = y"
-  then show "x \<frown> y = y \<frown> x" using sumregions_def by simp*)
-
   "\<Squnion> {x} x \<Longrightarrow> x \<frown> x"
 proof -
   assume a: "\<Squnion> {x} x"
@@ -292,42 +289,49 @@ theorem sum_relation_is_same':
   shows "\<Squnion> {k. r y k} x"
 proof -
   let ?\<beta> = "{k. r y k}"
-  assume a: "{k. r y k} \<noteq> {}"
-  have 0: "{k. r y k} \<noteq> {} \<Longrightarrow> \<Squnion> {k. r y k} x" using a sum_parts_eq by try0
-  have 0: "\<Squnion> {y} x \<Longrightarrow> y = x" using sumregions_def by force
-  from 0 have 1: "r y k \<Longrightarrow> k \<sqsubseteq> x" using assms by auto
-  from 1 have 2: "{k. r y k} = {k. k \<sqsubseteq> x}" 
-  from 2 have 3: "\<Squnion> {k. k \<sqsubseteq> x} x \<Longrightarrow> \<Squnion> {k. r y k} x" using blast
+  assume "\<Squnion> {k. k \<sqsubseteq> x} x"
+  have 0: "r y k \<Longrightarrow> k \<sqsubseteq> x" using all_has_partof assms by blast
+  from 0 have 1: "\<Squnion> {k. k \<sqsubseteq> x} x \<Longrightarrow> \<Squnion> {k. r y k} x" by sledgehammer
   then show "\<Squnion> {k. r y k} x" by sledgehammer
+  oops
 
 (* 1 mark *)
 theorem overlap_has_partof_overlap:
-  assumes a: "e \<frown> f"
-  shows s: "x \<sqsubseteq> e \<and> x \<frown> f"
+  assumes "e \<frown> f"
+  shows "\<exists>x. x \<sqsubseteq> e \<and> x \<frown> f"
 proof
-  from a have b: "\<exists>y. y \<sqsubseteq> e \<and> y \<sqsubseteq> f" using overlaps_def by simp
-  from b have c: "x \<sqsubseteq> e \<and> x \<sqsubseteq> f" using sumregions_def by try0
-  ultimately show "x \<sqsubseteq> e \<and> x \<frown> f" by assumption
+  from assms have 0: "\<exists>x. x \<sqsubseteq> e \<and> x \<sqsubseteq> f" using overlaps_def by simp
+  from 0 have 1: "x \<sqsubseteq> f \<Longrightarrow> " by sledgehammer
+  then show "\<exists>x. x \<sqsubseteq> e \<and> x \<frown> f" by sledgehammer
 oops
 
 (* 1 marks *)
 theorem sum_parts_of_one_eq:
-  assumes "undefined"
-  shows "undefined"
+  assumes "\<Squnion> {x} x"
+  shows "\<Squnion> {p. p \<sqsubseteq> x} x"
 oops
 
 (* 5 marks *)
 theorem both_partof_eq:
   assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
   shows "x = y"
-proof -
-  from assms have "x \<sqsubseteq> x" using A1 by blast
-  moreover
+proof (rule ccontr)
+  assume a: "\<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False"
+  from a have 0: "\<exists>z. z \<sqsubseteq> x \<and> \<not>(z \<sqsubseteq> y)" using sumregions_def by sledgehammer
+  from a have 1: "\<exists>z. z \<sqsubseteq> y \<and> (\<forall>v. v \<sqsubseteq> x \<and> v \<asymp> z)" by sledgehammer
+next
+  assume b: "\<exists>z. z \<sqsubseteq> x \<and> \<not>(z \<sqsubseteq> y)"
+  from assms b have 1: "\<exists>z. z \<sqsubseteq> x \<and> \<not>(z \<sqsubseteq> y) \<Longrightarrow> False" using A1 by blast
+  then show 
+next
+  assume c: "w \<sqsubseteq> y \<and> (\<forall>z. z \<sqsubseteq> x \<and> z \<asymp> w)"
+  from c have 2: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w"
+  ultimately show "False" by blast
 oops
 
 (* 4 marks *)
 theorem sum_all_with_parts_overlapping:
-  assumes "undefined"
+  assumes ""
   shows "undefined"
 oops
 

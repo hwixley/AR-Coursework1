@@ -297,13 +297,9 @@ proof -
 
 (* 1 mark *)
 theorem overlap_has_partof_overlap:
-  assumes "e \<frown> f"
+  assumes "\<And>e f. e \<frown> f"
   shows "\<exists>x. x \<sqsubseteq> e \<and> x \<frown> f"
-proof
-  from assms have 0: "\<exists>x. x \<sqsubseteq> e \<and> x \<sqsubseteq> f" using overlaps_def by simp
-  from 0 have 1: "x \<sqsubseteq> f \<Longrightarrow> " by sledgehammer
-  then show "\<exists>x. x \<sqsubseteq> e \<and> x \<frown> f" by sledgehammer
-oops
+  using assms overlaps_def by blast
 
 (* 1 marks *)
 theorem sum_parts_of_one_eq:
@@ -315,9 +311,20 @@ oops
 theorem both_partof_eq:
   assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
   shows "x = y"
-proof -
-  from assms have "x \<sqsubseteq> x" using A1 by blast
-  moreover
+proof (rule ccontr)
+  assume a: "\<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False" and "\<And>z r. z \<sqsubseteq> x \<and> r \<sqsubseteq> y"
+  from a have 0: "\<exists>z. z \<sqsubseteq> x \<and> \<not>(z \<sqsubseteq> y) \<Longrightarrow> False" using A1 assms by blast
+  from a have 1: "\<exists>z. z \<sqsubseteq> y \<and> v \<sqsubseteq> x \<and> v \<asymp> z \<Longrightarrow> False" by sledgehammer
+  then show "\<Squnion> {z. z \<sqsubseteq> x} y"
+next
+  assume b: "\<exists>z. z \<sqsubseteq> x \<and> \<not>(z \<sqsubseteq> y)"
+  fix z
+  from assms b have 1: "\<exists>z. z \<sqsubseteq> x \<and> \<not>(z \<sqsubseteq> y) \<Longrightarrow> False" using A1 by blast
+  then show 
+next
+  assume c: "w \<sqsubseteq> y \<and> (\<forall>z. z \<sqsubseteq> x \<and> z \<asymp> w)"
+  from c have 2: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w"
+  ultimately show "False" by blast
 oops
 
 (* 4 marks *)
