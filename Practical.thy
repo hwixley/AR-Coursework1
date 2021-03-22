@@ -293,8 +293,9 @@ proof -
   have 1: "r y k \<Longrightarrow> k \<sqsubseteq> x" using assms sumregions_def by simp
   have 2: "?\<beta> \<subseteq> ?\<alpha>" using 0 sumregions_def by blast
   have 3: "y \<frown> f \<Longrightarrow> \<exists>g. g \<sqsubseteq> y \<and> g \<frown> f" using assms by blast
-  have 4: "y \<frown> f \<Longrightarrow> "
-  then show "\<Squnion> ?\<beta> x" using A2 sumregions_def 0 assms by sledgehammer
+  have 4: "z \<sqsubseteq> y \<and> z \<sqsubseteq> f \<Longrightarrow> \<exists>g. r y g \<and> g \<frown> f"
+  using assms(2) overlaps_def by blast
+  then show "\<Squnion> ?\<beta> x" using A2 sumregions_def 0 assms overlaps_def by sledgehammer
   oops
 
 (* 1 mark *)
@@ -317,7 +318,8 @@ proof -
   have "\<Squnion> {z. z \<sqsubseteq> x} y"
   proof (rule ccontr)
     assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
-    have 0: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> \<not> (\<forall>y. y \<in> {z. z \<sqsubseteq> x} \<and>  y \<sqsubseteq> x)" using A2 A1 assms overlaps_refl sumregions_def by sledgehammer
+    have 0: "\<not> (\<forall>y. y \<in> {z. z \<sqsubseteq> x} \<and>  y \<sqsubseteq> x)" 
+      using A2 A1 assms overlaps_refl sumregions_def by sledgehammer
     have 0: "\<exists>z. z \<sqsubseteq> x \<and> \<not> z \<sqsubseteq> y" using A1 A2 assms sumregions_def a sum_parts_eq by sledgehammer
     have 1: "v \<sqsubseteq> x \<Longrightarrow> \<exists>z. z \<sqsubseteq> y \<and> v \<asymp> z" using sumregions_def A2 by sledgehammer
     then show "False"
@@ -337,6 +339,12 @@ oops
 theorem sum_all_with_parts_overlapping:
   assumes "\<Squnion> {z. \<forall>p. p \<sqsubseteq> z \<and> p \<frown> y} x"
   shows "\<Squnion> {y} x"
+proof -
+  have "\<Squnion> {y} x"
+  proof (rule ccontr)
+    assume a: "\<not> \<Squnion> {y} x"
+    have 0: "\<not> y \<sqsubseteq> x" using A2' a assms sumregions_def by fastforce
+    have 1: "\<exists>z. z \<sqsubseteq> x \<and> z \<asymp> y" using "0" assms sumregions_def by blast
 oops
 
 (* 2 marks *)
@@ -462,7 +470,10 @@ begin
 (* 2 marks *)
 thm equiv_def
 theorem conc_equiv:
-  "equiv undefined undefined"
+  "equiv a b" by sledgehammer
+
+  (*"a \<odot> a \<and> (a \<odot> b \<longrightarrow> b \<odot> a) \<and> (a \<odot> b \<and> b \<odot> c \<longrightarrow> a \<odot> c)"
+  by sledgehammer*)
 oops
 
 (* 6 marks *)
@@ -505,7 +516,7 @@ begin
 lemma
   assumes T4: "\<And>x y. \<lbrakk>sphere x; sphere y\<rbrakk> \<Longrightarrow> x y \<doteq> y x"
       and A9: "\<exists>\<degree>s. s \<sqsubseteq> r"
-  shows False
+    shows False
 oops
 
 (* 3 marks *)

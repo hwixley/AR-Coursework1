@@ -317,7 +317,7 @@ proof -
   have "\<Squnion> {z. z \<sqsubseteq> x} y"
   proof (rule ccontr)
     assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
-    have 0: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> \<not> (\<forall>y. y \<in> {z. z \<sqsubseteq> x} \<and>  y \<sqsubseteq> x)" using A2 a sumregions_def by sledgehammer
+    have 0: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> \<not> (\<forall>y. y \<in> {z. z \<sqsubseteq> x} \<and>  y \<sqsubseteq> x)" using A2 A1 assms overlaps_refl sumregions_def by sledgehammer
     have 0: "\<exists>z. z \<sqsubseteq> x \<and> \<not> z \<sqsubseteq> y" using A1 A2 assms sumregions_def a sum_parts_eq by sledgehammer
     have 1: "v \<sqsubseteq> x \<Longrightarrow> \<exists>z. z \<sqsubseteq> y \<and> v \<asymp> z" using sumregions_def A2 by sledgehammer
     then show "False"
@@ -350,17 +350,16 @@ qed
 (* 2 marks *)
 theorem sum_all_with_parts_overlapping_self:
   "\<Squnion> {z. \<forall>p. p \<sqsubseteq> z \<and> p \<frown> x} y \<Longrightarrow> y = x"
-  using A2 A2' sumregions_def by sledgehammer
-proof -
-  let ?\<alpha> = "{z. \<forall>p. p \<sqsubseteq> z \<and> p \<frown> x}"
-  assume a: "\<Squnion> ?\<alpha> y"
-  thus "y = x" using a A2 A2' sumregions_def by auto
-qed
+  using A2 sumregions_def by auto
 
 (* 4 marks *)
 theorem proper_have_nonoverlapping_proper:
   assumes "s \<sqsubset> r"
   shows "\<exists>z. z \<sqsubset> r \<and> z \<asymp> s"
+proof -
+  have 0: "\<Squnion> {z. z \<sqsubseteq> r} r" using A2 sum_one_is_self sum_parts_of_one_eq by auto
+  from 0 have 1: "z \<in> {z. z \<sqsubseteq> r} \<Longrightarrow> z \<sqsubset> r" by sledgehammer
+  thus "\<exists>z. z \<sqsubset> r \<and> z \<asymp> s" using A2 assms sumregions_def by sledgehammer
 oops
 
 (* 1 mark *)
@@ -372,8 +371,7 @@ next
   show "\<And>x. x \<sqsubseteq> x"
     sorry
 next
-  show "\<And>x y z. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> z\<rbrakk> \<Longrightarrow> x \<sqsubseteq> z"
-    sorry
+  show "\<And>x y z. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> z\<rbrakk> \<Longrightarrow> x \<sqsubseteq> z" using A1 by blast
 next
   show "\<And>x y. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> x\<rbrakk> \<Longrightarrow> x = y"
     sorry
