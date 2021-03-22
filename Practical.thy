@@ -289,13 +289,12 @@ theorem sum_relation_is_same':
 proof -
   let ?\<beta> = "{k. r y k}"
   let ?\<alpha> = "{k. k \<sqsubseteq> x}"
-  assume a: "\<Squnion> ?\<alpha> x"
-  have 0: "r y k \<Longrightarrow> k \<sqsubseteq> x" using all_has_partof assms by blast
-  have 1: "z \<in> ?\<beta> \<Longrightarrow> z \<in> ?\<alpha>" using a all_has_partof by auto
-  have 2: "?\<beta> \<subseteq> ?\<alpha>" using a all_has_partof by blast
-  have 3: "x \<frown> f \<Longrightarrow> \<exists>g. r x g \<and> g \<frown> f"
-  using assms(2) assms(3) mereology.all_has_partof mereology_axioms by fastforce
-  then show "\<Squnion> ?\<beta> x" by sledgehammer
+  have 0: "\<Squnion> ?\<alpha> x" using assms(3) sumregions_def by auto
+  have 1: "r y k \<Longrightarrow> k \<sqsubseteq> x" using assms sumregions_def by simp
+  have 2: "?\<beta> \<subseteq> ?\<alpha>" using 0 sumregions_def by blast
+  have 3: "y \<frown> f \<Longrightarrow> \<exists>g. g \<sqsubseteq> y \<and> g \<frown> f" using assms by blast
+  have 4: "y \<frown> f \<Longrightarrow> "
+  then show "\<Squnion> ?\<beta> x" using A2 sumregions_def 0 assms by sledgehammer
   oops
 
 (* 1 mark *)
@@ -314,11 +313,15 @@ theorem sum_parts_of_one_eq:
 theorem both_partof_eq:
   assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
   shows "x = y"
-proof (rule ccontr)
-  assume a: "\<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False" and "\<And>z r. z \<sqsubseteq> x \<and> r \<sqsubseteq> y"
-  from a have 0: "\<exists>z. z \<sqsubseteq> x \<and> \<not>(z \<sqsubseteq> y) \<Longrightarrow> False" using A1 assms by blast
-  from a have 1: "\<exists>z. z \<sqsubseteq> y \<and> v \<sqsubseteq> x \<and> v \<asymp> z \<Longrightarrow> False" by sledgehammer
-  then show "\<Squnion> {z. z \<sqsubseteq> x} y"
+proof -
+  have "\<Squnion> {z. z \<sqsubseteq> x} y"
+  proof (rule ccontr)
+    assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
+    have 0: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> \<not> (\<forall>y. y \<in> {z. z \<sqsubseteq> x} \<and>  y \<sqsubseteq> x)" using A2 A1 assms overlaps_refl sumregions_def by sledgehammer
+    have 0: "\<exists>z. z \<sqsubseteq> x \<and> \<not> z \<sqsubseteq> y" using A1 A2 assms sumregions_def a sum_parts_eq by sledgehammer
+    have 1: "v \<sqsubseteq> x \<Longrightarrow> \<exists>z. z \<sqsubseteq> y \<and> v \<asymp> z" using sumregions_def A2 by sledgehammer
+    then show "False"
+  qed
 next
   assume b: "\<exists>z. z \<sqsubseteq> x \<and> \<not>(z \<sqsubseteq> y)"
   fix z
@@ -338,24 +341,25 @@ oops
 
 (* 2 marks *)
 theorem sum_one_is_self:
-  "\<Squnion> {x} x"
+  "\<Squnion> {x} y \<Longrightarrow> y = x"
 proof -
-  assume "\<Squnion> {x} y"
-  have 0: "\<Squnion> {x} y \<Longrightarrow> x = y" using sumregions_def by fastforce
-  from 0 have 1: "\<Squnion> {x} y \<Longrightarrow> \<Squnion> {x} x" by blast
-  then show "\<Squnion> {x} x" by sledgehammer
-oops
+  assume a: "\<Squnion> {x} y"
+  show "y = x" using a sumregions_def by auto
+qed
 
 (* 2 marks *)
 theorem sum_all_with_parts_overlapping_self:
-  "\<Squnion> {z. \<forall>p. p \<sqsubseteq> z \<and> p \<frown>x} x"
-  by sledgehammer
-oops
+  "\<Squnion> {z. \<forall>p. p \<sqsubseteq> z \<and> p \<frown> x} y \<Longrightarrow> y = x"
+  using A2 sumregions_def by auto
 
 (* 4 marks *)
 theorem proper_have_nonoverlapping_proper:
   assumes "s \<sqsubset> r"
   shows "\<exists>z. z \<sqsubset> r \<and> z \<asymp> s"
+proof -
+  have 0: "\<Squnion> {z. z \<sqsubseteq> r} r" using A2 sum_one_is_self sum_parts_of_one_eq by auto
+  from 0 have 1: "z \<in> {z. z \<sqsubseteq> r} \<Longrightarrow> z \<sqsubset> r" by sledgehammer
+  thus "\<exists>z. z \<sqsubset> r \<and> z \<asymp> s" using A2 assms sumregions_def by sledgehammer
 oops
 
 (* 1 mark *)
@@ -367,8 +371,7 @@ next
   show "\<And>x. x \<sqsubseteq> x"
     sorry
 next
-  show "\<And>x y z. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> z\<rbrakk> \<Longrightarrow> x \<sqsubseteq> z"
-    sorry
+  show "\<And>x y z. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> z\<rbrakk> \<Longrightarrow> x \<sqsubseteq> z" using A1 by blast
 next
   show "\<And>x y. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> x\<rbrakk> \<Longrightarrow> x = y"
     sorry
