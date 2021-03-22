@@ -315,13 +315,12 @@ theorem both_partof_eq:
   assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
   shows "x = y"
 proof -
+  assume "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
   have "\<Squnion> {z. z \<sqsubseteq> x} y"
   proof (rule ccontr)
     assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
-    have 0: "\<not> (\<forall>y. y \<in> {z. z \<sqsubseteq> x} \<and>  y \<sqsubseteq> x)" 
-      using A2 A1 assms overlaps_refl sumregions_def by sledgehammer
-    have 0: "\<exists>z. z \<sqsubseteq> x \<and> \<not> z \<sqsubseteq> y" using A1 A2 assms sumregions_def a sum_parts_eq by sledgehammer
-    have 1: "v \<sqsubseteq> x \<Longrightarrow> \<exists>z. z \<sqsubseteq> y \<and> v \<asymp> z" using sumregions_def A2 by sledgehammer
+    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y" using A1 A2 assms sumregions_def a sum_parts_eq by sledgehammer
+    have 1: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w" using sumregions_def A2 by sledgehammer
     then show "False"
   qed
 next
