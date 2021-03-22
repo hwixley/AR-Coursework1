@@ -241,26 +241,25 @@ theorem overlaps_sym:
 
 (* 1 mark *)
 theorem in_sum_set_partof:
-  "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<longrightarrow> m \<sqsubseteq> r"
-proof
+  "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<Longrightarrow> m \<sqsubseteq> r"
+proof -
   have "\<Squnion> \<alpha> r \<Longrightarrow> (\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> r)" using sumregions_def by simp
   then show "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<Longrightarrow> m \<sqsubseteq> r" by simp
 qed
 
 (* 3 marks *)
 theorem overlaps_refl:
-  "\<Squnion> {x} x \<Longrightarrow> x \<frown> x"
+  "x \<frown> x"
 proof -
-  assume a: "\<Squnion> {x} x"
-  have 0: "\<Squnion> {x} x \<Longrightarrow> x \<sqsubseteq> x \<longrightarrow> x \<frown> x" using sumregions_def by simp
-  from 0 have 1: "\<Squnion> {x} x \<Longrightarrow> x \<frown> x" using impI by (simp add: sumregions_def)
-  then show "\<Squnion> {x} x \<Longrightarrow> x \<frown> x" using 0 by blast
+  have 0: "{x} \<noteq> {} \<Longrightarrow> \<exists>z. \<Squnion> {x} z" using sumregions_def A2 by blast
+  from 0 have 1: "{x} \<noteq> {} \<Longrightarrow> \<Squnion> {x} x" using sumregions_def A2 by fastforce
+  then show "x \<frown> x" using "1" sumregions_def by auto
 qed
 
 (* 1 mark *)
 theorem all_has_partof:
-  "\<Squnion> \<alpha> r \<Longrightarrow> x \<in> \<alpha> \<and> x \<sqsubseteq> r"
-  using sumregions_def by simp
+  "\<exists>p. p \<sqsubseteq> r"
+  using A2 overlaps_def sumregions_def by fastforce
 
 (* 2 marks *)
 theorem partof_overlaps:
@@ -275,10 +274,10 @@ qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "{p. p \<sqsubseteq> x} \<noteq> {} \<Longrightarrow> \<Squnion> {p. p \<sqsubseteq> x} x"
+  "\<Squnion> {p. p \<sqsubseteq> x} z \<Longrightarrow> z = x"
 proof -
-  have 0: " {p. p \<sqsubseteq> x} \<noteq> {} \<Longrightarrow> (\<exists>z. \<Squnion> {p. p \<sqsubseteq> x} z)" using A2 by simp
-  from 0 show "{p. p \<sqsubseteq> x} \<noteq> {} \<Longrightarrow> \<Squnion> {p. p \<sqsubseteq> x} x" using sumregions_def by auto
+  assume a: "\<Squnion> {p. p \<sqsubseteq> x} z"
+  thus "\<Squnion> {p. p \<sqsubseteq> x} z \<Longrightarrow> z = x" using exI sumregions_def A2 by auto
 qed
 
 (* 2 marks *)
