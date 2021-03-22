@@ -478,7 +478,7 @@ theorem region_is_spherical_sum:
 
 (* 1 mark *)
 theorem region_spherical_interior:
-  "undefined"
+  "undefined \<Longrightarrow> oninterior s r"
 oops
 
 (* 2 marks *)
