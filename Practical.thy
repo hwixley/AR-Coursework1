@@ -344,8 +344,11 @@ proof -
   proof (rule ccontr)
     assume a: "\<not> \<Squnion> {y} x"
     have 0: "\<not> y \<sqsubseteq> x" using A2' a assms sumregions_def by fastforce
-    have 1: "\<exists>z. z \<sqsubseteq> x \<and> z \<asymp> y" using "0" assms sumregions_def by blast
-oops
+    have 1: "\<exists>w. w \<sqsubseteq> x \<and> w \<asymp> y" using "0" assms sumregions_def by blast
+    thus "False" using "0" assms sumregions_def by blast
+  qed
+  thus "\<Squnion> {y} x" by simp
+qed
 
 (* 2 marks *)
 theorem sum_one_is_self:
