@@ -319,19 +319,11 @@ proof -
   have "\<Squnion> {z. z \<sqsubseteq> x} y"
   proof (rule ccontr)
     assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
-    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y" using A1 A2 assms sumregions_def a sum_parts_eq by sledgehammer
-    have 1: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w" using sumregions_def A2 by sledgehammer
-    then show "False"
+    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y" using assms trans by blast
+    have 1: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w" using sumregions_def by blast
+    thus "False" by sledgehammer
   qed
-next
-  assume b: "\<exists>z. z \<sqsubseteq> x \<and> \<not>(z \<sqsubseteq> y)"
-  fix z
-  from assms b have 1: "\<exists>z. z \<sqsubseteq> x \<and> \<not>(z \<sqsubseteq> y) \<Longrightarrow> False" using A1 by blast
-  then show 
-next
-  assume c: "w \<sqsubseteq> y \<and> (\<forall>z. z \<sqsubseteq> x \<and> z \<asymp> w)"
-  from c have 2: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w"
-  ultimately show "False" by blast
+  show "x = y" by sledgehammer
 oops
 
 (* 4 marks *)
