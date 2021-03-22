@@ -319,7 +319,8 @@ proof -
   have "\<Squnion> {z. z \<sqsubseteq> x} y"
   proof (rule ccontr)
     assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
-    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y" using assms trans by blast
+    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y" using exE assms A1 by sledgehammer
+    moreover
     have 1: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w" using sumregions_def by blast
     thus "False" by sledgehammer
   qed
@@ -472,8 +473,8 @@ oops
 
 (* 6 marks *)
 theorem region_is_spherical_sum:
-  "undefined"
-oops
+  "\<Squnion> {p. p \<sqsubseteq> x \<and> sphere p} y \<Longrightarrow> y = x"
+  by (simp add: parthood_partial_order.antisym partof.sumregions_def)
 
 (* 1 mark *)
 theorem region_spherical_interior:
