@@ -314,13 +314,26 @@ theorem both_partof_eq:
   shows "x = y"
 proof -
   assume "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
-  have "\<Squnion> {z. z \<sqsubseteq> x} y"
-  proof (rule ccontr)
+  have "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False"
+  proof -
     assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
-    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y" using exE assms A1 by sledgehammer
-    moreover
-    have 1: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w" using sumregions_def by blast
-    thus "False" by sledgehammer
+    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y \<Longrightarrow> False"
+    proof -
+      assume b: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
+      have 1: "w \<sqsubseteq> x \<Longrightarrow> w \<sqsubseteq> y" using assms A1 by blast
+      from 1 have 2: "\<not>(\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" using A1 assms by blast
+      thus "False" using b by simp
+    qed
+    have 3: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w \<Longrightarrow> False"
+    proof -
+      assume c: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w"
+      fix w
+      have 4: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
+      thus "False" using c disjoint_def overlaps_refl by blast
+    qed
+    have 5: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> (\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y) \<or> (\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w)"
+    using "0" overlaps_refl sumregions_def A2 all_has_partof sum_parts_eq mereology_axioms by sledgehammer
+    thus "False" using A2 sumregions_def 0 3 all_has_partof by sledgehammer
   qed
   show "x = y" by sledgehammer
 oops
@@ -358,9 +371,10 @@ theorem proper_have_nonoverlapping_proper:
   assumes "s \<sqsubset> r"
   shows "\<exists>z. z \<sqsubset> r \<and> z \<asymp> s"
 proof -
-  have 0: "\<Squnion> {z. z \<sqsubseteq> r} r" using A2 sum_one_is_self sum_parts_of_one_eq by auto
-  from 0 have 1: "z \<in> {z. z \<sqsubseteq> r} \<Longrightarrow> z \<sqsubset> r" by sledgehammer
-  thus "\<exists>z. z \<sqsubset> r \<and> z \<asymp> s" using A2 assms sumregions_def by sledgehammer
+  have 0: "\<Squnion> {z. z \<sqsubset> r} y" using A2 sumregions_def properpartof_def using assms by auto
+  from 0 have 1: "y \<noteq> s" using sumregions_def properpartof_def by auto
+  from 1 have 2: "{z. z \<sqsubset> r} \<noteq> {s}" using "0" sum_one_is_self by auto
+  thus "\<exists>z. z \<sqsubset> r \<and> z \<asymp> s" using "0" properpartof_def sumregions_def by auto
 oops
 
 (* 1 mark *)
