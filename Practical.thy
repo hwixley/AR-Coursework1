@@ -486,20 +486,23 @@ oops
 theorem equal_interiors_equal_regions:
   assumes "{p. p \<sqsubseteq> x \<and> sphere p} = {p. p \<sqsubseteq> y \<and> sphere p}"
   shows "x = y"
-  by sledgehammer
+  using sumregions_def A2 mereology_axioms mereology_def by auto
 oops
 
 (* 2 marks *)
 theorem proper_have_nonoverlapping_proper_sphere:
   assumes "s \<sqsubset> r"
   shows "\<exists>p. sphere p \<and> p \<sqsubset> r \<and> p \<asymp> s"
+proof -
+  assume a: "s \<sqsubset> r"
+  thus "\<exists>p. sphere p \<and> p \<sqsubset> r \<and> p \<asymp> s"
 oops
 
 (* 4 marks *)
 theorem not_sphere_spherical_parts_gt1:
-  assumes "undefined"
-      and "undefined"
-  shows "undefined"
+  assumes "\<Squnion> \<alpha> r"
+      and "\<not> sphere r"
+  shows "\<exists>a b. sphere a \<and> sphere b \<and> a \<noteq> b \<and> a \<sqsubseteq> r \<and> b \<sqsubseteq> r"
 oops
 
 end
