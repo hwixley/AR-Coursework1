@@ -517,11 +517,15 @@ lemma
   assumes T4: "\<And>x y. \<lbrakk>sphere x; sphere y\<rbrakk> \<Longrightarrow> x y \<doteq> y x"
       and A9: "\<exists>\<degree>s. s \<sqsubseteq> r"
     shows False
+proof -
+  
 oops
 
 (* 3 marks *)
+(*The issue was that the geometry definitions treated these arguments as regions and not spheres. 
+I fixed it by adding sphere conditions using conjunctions to the definition.*)
 definition equidistant3' :: "'region \<Rightarrow> 'region \<Rightarrow> 'region \<Rightarrow> bool" where
-  "equidistant3' x y z \<equiv> undefined"
+  "equidistant3' x y z \<equiv> \<exists>\<degree>z'. z' \<odot> z \<and> onboundary y z' \<and> onboundary x z' \<and> sphere x \<and> sphere y \<and> sphere z"
 
 no_notation equidistant4 ("_ _ \<doteq> _ _" [100, 100, 100, 100] 100)
 
@@ -534,10 +538,11 @@ datatype two_reg = Left | Right | Both
 
 (* 2 marks *)
 definition tworeg_partof :: "two_reg \<Rightarrow> two_reg \<Rightarrow> bool" (infix "\<sqsubseteq>" 100) where
-  "x \<sqsubseteq> y \<equiv> undefined"
+  "x \<sqsubseteq> y \<equiv> x = Both \<or> y = Both \<or> (y = Left \<and> x = Right) \<or> (y = Right \<and> x = Left)"
 
 (* 12 marks *)
 interpretation mereology "(\<sqsubseteq>)"
+proof
 oops
 
 
