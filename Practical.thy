@@ -290,13 +290,11 @@ proof -
   let ?\<beta> = "{k. r y k}"
   let ?\<alpha> = "{k. k \<sqsubseteq> x}"
   have 0: "\<Squnion> ?\<alpha> x" using assms(3) sumregions_def by auto
-  have 1: "r y k \<Longrightarrow> k \<sqsubseteq> x" using assms sumregions_def by simp
-  have 2: "?\<beta> \<subseteq> ?\<alpha>" using 0 sumregions_def by blast
-  have 3: "y \<frown> f \<Longrightarrow> \<exists>g. g \<sqsubseteq> y \<and> g \<frown> f" using assms by blast
-  have 4: "z \<sqsubseteq> y \<and> z \<sqsubseteq> f \<Longrightarrow> \<exists>g. r y g \<and> g \<frown> f"
-  using assms(2) overlaps_def by blast
-  then show "\<Squnion> ?\<beta> x" using A2 sumregions_def 0 assms overlaps_def by sledgehammer
-  oops
+  have 1: "y \<sqsubseteq> x \<Longrightarrow> r y y" using assms sumregions_def by fastforce
+  from 1 have 2: "p \<sqsubseteq> x \<Longrightarrow> r y p" using sumregions_def assms by force
+  have 3: "?\<beta> = ?\<alpha>" using 0 sumregions_def using 1 assms(3) by fastforce
+  then show "\<Squnion> ?\<beta> x" using 0 by simp
+qed
 
 (* 1 mark *)
 theorem overlap_has_partof_overlap:
@@ -538,7 +536,7 @@ datatype two_reg = Left | Right | Both
 
 (* 2 marks *)
 definition tworeg_partof :: "two_reg \<Rightarrow> two_reg \<Rightarrow> bool" (infix "\<sqsubseteq>" 100) where
-  "x \<sqsubseteq> y \<equiv> x = Both \<or> y = Both \<or> (y = Left \<and> x = Right) \<or> (y = Right \<and> x = Left)"
+  "x \<sqsubseteq> y \<equiv> x = Both \<or> y = Both \<or> (y = Right \<and> x = Right) \<or> (y = Left \<and> x = Left)"
 
 (* 12 marks *)
 interpretation mereology "(\<sqsubseteq>)"
