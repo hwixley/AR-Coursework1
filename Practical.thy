@@ -482,15 +482,17 @@ theorem region_spherical_interior:
 oops
 
 (* 2 marks *)
+(*Only A8 is needed for this proof as*)
 theorem equal_interiors_equal_regions:
-  assumes "undefined"
-  shows "undefined"
+  assumes "{p. p \<sqsubseteq> x \<and> sphere p} = {p. p \<sqsubseteq> y \<and> sphere p}"
+  shows "x = y"
+  by sledgehammer
 oops
 
 (* 2 marks *)
 theorem proper_have_nonoverlapping_proper_sphere:
-  assumes "undefined"
-  shows "undefined"
+  assumes "s \<sqsubset> r"
+  shows "\<exists>p. sphere p \<and> p \<sqsubset> r \<and> p \<asymp> s"
 oops
 
 (* 4 marks *)

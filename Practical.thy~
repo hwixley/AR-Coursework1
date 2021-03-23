@@ -293,8 +293,9 @@ proof -
   have 1: "r y k \<Longrightarrow> k \<sqsubseteq> x" using assms sumregions_def by simp
   have 2: "?\<beta> \<subseteq> ?\<alpha>" using 0 sumregions_def by blast
   have 3: "y \<frown> f \<Longrightarrow> \<exists>g. g \<sqsubseteq> y \<and> g \<frown> f" using assms by blast
-  have 4: "y \<frown> f \<Longrightarrow> "
-  then show "\<Squnion> ?\<beta> x" using A2 sumregions_def 0 assms by sledgehammer
+  have 4: "z \<sqsubseteq> y \<and> z \<sqsubseteq> f \<Longrightarrow> \<exists>g. r y g \<and> g \<frown> f"
+  using assms(2) overlaps_def by blast
+  then show "\<Squnion> ?\<beta> x" using A2 sumregions_def 0 assms overlaps_def by sledgehammer
   oops
 
 (* 1 mark *)
@@ -314,30 +315,32 @@ theorem both_partof_eq:
   assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
   shows "x = y"
 proof -
+  assume "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
   have "\<Squnion> {z. z \<sqsubseteq> x} y"
   proof (rule ccontr)
     assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
-    have 0: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> \<not> (\<forall>y. y \<in> {z. z \<sqsubseteq> x} \<and>  y \<sqsubseteq> x)" using A2 A1 assms overlaps_refl sumregions_def by sledgehammer
-    have 0: "\<exists>z. z \<sqsubseteq> x \<and> \<not> z \<sqsubseteq> y" using A1 A2 assms sumregions_def a sum_parts_eq by sledgehammer
-    have 1: "v \<sqsubseteq> x \<Longrightarrow> \<exists>z. z \<sqsubseteq> y \<and> v \<asymp> z" using sumregions_def A2 by sledgehammer
-    then show "False"
+    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y" using exE assms A1 by sledgehammer
+    moreover
+    have 1: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w" using sumregions_def by blast
+    thus "False" by sledgehammer
   qed
-next
-  assume b: "\<exists>z. z \<sqsubseteq> x \<and> \<not>(z \<sqsubseteq> y)"
-  fix z
-  from assms b have 1: "\<exists>z. z \<sqsubseteq> x \<and> \<not>(z \<sqsubseteq> y) \<Longrightarrow> False" using A1 by blast
-  then show 
-next
-  assume c: "w \<sqsubseteq> y \<and> (\<forall>z. z \<sqsubseteq> x \<and> z \<asymp> w)"
-  from c have 2: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w"
-  ultimately show "False" by blast
+  show "x = y" by sledgehammer
 oops
 
 (* 4 marks *)
 theorem sum_all_with_parts_overlapping:
   assumes "\<Squnion> {z. \<forall>p. p \<sqsubseteq> z \<and> p \<frown> y} x"
   shows "\<Squnion> {y} x"
-oops
+proof -
+  have "\<Squnion> {y} x"
+  proof (rule ccontr)
+    assume a: "\<not> \<Squnion> {y} x"
+    have 0: "\<not> y \<sqsubseteq> x" using A2' a assms sumregions_def by fastforce
+    have 1: "\<exists>w. w \<sqsubseteq> x \<and> w \<asymp> y" using "0" assms sumregions_def by blast
+    thus "False" using "0" assms sumregions_def by blast
+  qed
+  thus "\<Squnion> {y} x" by simp
+qed
 
 (* 2 marks *)
 theorem sum_one_is_self:
@@ -462,29 +465,34 @@ begin
 (* 2 marks *)
 thm equiv_def
 theorem conc_equiv:
-  "equiv undefined undefined"
+  "equiv a b" by sledgehammer
+
+  (*"a \<odot> a \<and> (a \<odot> b \<longrightarrow> b \<odot> a) \<and> (a \<odot> b \<and> b \<odot> c \<longrightarrow> a \<odot> c)"
+  by sledgehammer*)
 oops
 
 (* 6 marks *)
 theorem region_is_spherical_sum:
-  "undefined"
-oops
+  "\<Squnion> {p. p \<sqsubseteq> x \<and> sphere p} y \<Longrightarrow> y = x"
+  by (simp add: parthood_partial_order.antisym partof.sumregions_def)
 
 (* 1 mark *)
 theorem region_spherical_interior:
-  "undefined"
+  "undefined \<Longrightarrow> oninterior s r"
 oops
 
 (* 2 marks *)
+(*Only A8 is needed for this proof as*)
 theorem equal_interiors_equal_regions:
-  assumes "undefined"
-  shows "undefined"
+  assumes "{p. p \<sqsubseteq> x \<and> sphere p} = {p. p \<sqsubseteq> y \<and> sphere p}"
+  shows "x = y"
+  by sledgehammer
 oops
 
 (* 2 marks *)
 theorem proper_have_nonoverlapping_proper_sphere:
-  assumes "undefined"
-  shows "undefined"
+  assumes "s \<sqsubset> r"
+  shows "\<exists>p. sphere p \<and> p \<sqsubset> r \<and> p \<asymp> s"
 oops
 
 (* 4 marks *)
@@ -505,7 +513,7 @@ begin
 lemma
   assumes T4: "\<And>x y. \<lbrakk>sphere x; sphere y\<rbrakk> \<Longrightarrow> x y \<doteq> y x"
       and A9: "\<exists>\<degree>s. s \<sqsubseteq> r"
-  shows False
+    shows False
 oops
 
 (* 3 marks *)
