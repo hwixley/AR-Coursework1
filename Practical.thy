@@ -274,10 +274,10 @@ qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "\<Squnion> {p. p \<sqsubseteq> x} z \<Longrightarrow> z = x"
+  "\<Squnion> {p. p \<sqsubseteq> x} y \<Longrightarrow> y = x"
 proof -
-  assume a: "\<Squnion> {p. p \<sqsubseteq> x} z"
-  thus "\<Squnion> {p. p \<sqsubseteq> x} z \<Longrightarrow> z = x" using exI sumregions_def A2 by auto
+  assume a: "\<Squnion> {p. p \<sqsubseteq> x} y"
+  thus "\<Squnion> {p. p \<sqsubseteq> x} y \<Longrightarrow> y = x" using sumregions_def A2 by auto
 qed
 
 (* 2 marks *)
@@ -292,7 +292,7 @@ proof -
   have 0: "\<Squnion> ?\<alpha> x" using assms(3) sumregions_def by auto
   have 1: "y \<sqsubseteq> x \<Longrightarrow> r y y" using assms sumregions_def by fastforce
   from 1 have 2: "p \<sqsubseteq> x \<Longrightarrow> r y p" using sumregions_def assms by force
-  have 3: "?\<beta> = ?\<alpha>" using 0 sumregions_def using 1 assms(3) by fastforce
+  have 3: "?\<beta> = ?\<alpha>" using sumregions_def 1 assms(3) by fastforce
   thus "\<Squnion> ?\<beta> x" using 0 by simp
 qed
 
@@ -371,8 +371,8 @@ theorem proper_have_nonoverlapping_proper:
 proof -
   have 0: "\<Squnion> {z. z \<sqsubset> r} y" using A2 sumregions_def properpartof_def using assms by auto
   from 0 have 1: "y \<noteq> s" using sumregions_def properpartof_def by auto
-  from 1 have 2: "{z. z \<sqsubset> r} \<noteq> {s}" using "0" sum_one_is_self by auto
-  thus "\<exists>z. z \<sqsubset> r \<and> z \<asymp> s" using "0" properpartof_def sumregions_def by auto
+  from 1 have 2: "{z. z \<sqsubset> r} \<noteq> {s}" using 0 sum_one_is_self by auto
+  thus "\<exists>z. z \<sqsubset> r \<and> z \<asymp> s" using 0 properpartof_def sumregions_def by auto
 oops
 
 (* 1 mark *)
