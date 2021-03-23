@@ -331,11 +331,9 @@ proof -
       have 4: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
       thus "False" using c disjoint_def overlaps_refl by blast
     qed
-    have 5: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> (\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y) \<or> (\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w)"
-    using "0" overlaps_refl sumregions_def A2 all_has_partof sum_parts_eq mereology_axioms by sledgehammer
-    thus "False" using A2 sumregions_def 0 3 all_has_partof by sledgehammer
+    thus "False" using A2 sumregions_def 0 3 all_has_partof a mereology_axioms by sledgehammer
   qed
-  show "x = y" by sledgehammer
+  thus "x = y" by sledgehammer
 oops
 
 (* 4 marks *)
@@ -510,17 +508,17 @@ oops
 (* 2 marks *)
 theorem proper_have_nonoverlapping_proper_sphere:
   assumes "s \<sqsubset> r"
-  shows "\<exists>p. sphere p \<and> p \<sqsubset> r \<and> p \<asymp> s"
+  shows "\<exists>\<degree>p. p \<sqsubset> r \<and> p \<asymp> s"
 proof -
   assume a: "s \<sqsubset> r"
-  thus "\<exists>p. sphere p \<and> p \<sqsubset> r \<and> p \<asymp> s"
+  thus "\<exists>\<degree>p. p \<sqsubset> r \<and> p \<asymp> s"
 oops
 
 (* 4 marks *)
 theorem not_sphere_spherical_parts_gt1:
   assumes "\<Squnion> \<alpha> r"
       and "\<not> sphere r"
-  shows "\<exists>a b. sphere a \<and> sphere b \<and> a \<noteq> b \<and> a \<sqsubseteq> r \<and> b \<sqsubseteq> r"
+  shows "\<exists>\<degree>a b. a \<noteq> b \<and> a \<sqsubseteq> r \<and> b \<sqsubseteq> r"
 oops
 
 end
