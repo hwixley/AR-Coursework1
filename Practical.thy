@@ -324,6 +324,7 @@ proof -
       from 1 have 2: "\<not>(\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" using A1 assms by blast
       thus "False" using b by simp
     qed
+    moreover
     have 3: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w \<Longrightarrow> False"
     proof -
       assume c: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w"
@@ -331,7 +332,7 @@ proof -
       have 4: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
       thus "False" using c disjoint_def overlaps_refl by blast
     qed
-    thus "False" using A2 sumregions_def 0 3 all_has_partof a mereology_axioms by sledgehammer
+    ultimately show "False" using A2 sumregions_def 0 3 all_has_partof a mereology_axioms by sledgehammer
   qed
   thus "x = y" by sledgehammer
 oops
@@ -498,7 +499,7 @@ theorem region_spherical_interior:
 oops
 
 (* 2 marks *)
-(*Only A8 is needed for this proof as*)
+(*Only A8 is needed for this proof as...*)
 theorem equal_interiors_equal_regions:
   assumes "{p. p \<sqsubseteq> x \<and> sphere p} = {p. p \<sqsubseteq> y \<and> sphere p}"
   shows "x = y"
@@ -559,6 +560,19 @@ definition tworeg_partof :: "two_reg \<Rightarrow> two_reg \<Rightarrow> bool" (
 (* 12 marks *)
 interpretation mereology "(\<sqsubseteq>)"
 proof
+  show "\<forall>x y z. x \<sqsubseteq> y \<and> y \<sqsubseteq> z \<longrightarrow> x \<sqsubseteq> z"
+  proof -
+    have 0: "x \<sqsubseteq> y \<and> y \<sqsubseteq> x \<longrightarrow> x \<sqsubseteq> x" using two_reg.exhaust tworeg_partof_def by auto
+    thus "\<forall>x y z. x \<sqsubseteq> y \<and> y \<sqsubseteq> z \<longrightarrow> x \<sqsubseteq> z" using impI by sledgehammer
+    oops
+  qed
+next
+  show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. partof.sumregions (\<sqsubseteq>) \<alpha> x)"
+  proof -
+    sorry
+next
+  show "\<forall>\<alpha> x y. partof.sumregions (\<sqsubseteq>) \<alpha> x \<and> partof.sumregions (\<sqsubseteq>) \<alpha> y \<longrightarrow> x = y"
+    sorry
 oops
 
 
