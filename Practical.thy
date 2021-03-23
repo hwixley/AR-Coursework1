@@ -380,15 +380,18 @@ oops
 (* 1 mark *)
 sublocale parthood_partial_order: order "(\<sqsubseteq>)" "(\<sqsubset>)"
 proof
-  show "\<And>x y. x \<sqsubset> y = (x \<sqsubseteq> y \<and> \<not> y \<sqsubseteq> x)"
-    sorry
+  show "\<And>x y. x \<sqsubset> y = (x \<sqsubseteq> y \<and> \<not> y \<sqsubseteq> x)" using properpartof_def A2 sumregions_def by auto
 next
   show "\<And>x. x \<sqsubseteq> x"
-    sorry
+  proof -
+    have 0: "\<Squnion> {x} x" using A2 sum_one_is_self by auto
+    from 0 have 1: "y \<in> {x} \<Longrightarrow>  y \<sqsubseteq> x" using sumregions_def by simp
+    thus "\<And>x. x \<sqsubseteq> x" using sumregions_def 0 by force
+  qed
 next
   show "\<And>x y z. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> z\<rbrakk> \<Longrightarrow> x \<sqsubseteq> z" using A1 by blast
 next
-  show "\<And>x y. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> x\<rbrakk> \<Longrightarrow> x = y"
+  show "\<And>x y. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> x\<rbrakk> \<Longrightarrow> x = y" using sumregions_def A2 A1 sum_one_is_self singletonD by sledgehammer
     sorry
 qed
 
