@@ -244,7 +244,7 @@ theorem in_sum_set_partof:
   "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<Longrightarrow> m \<sqsubseteq> r"
 proof -
   have "\<Squnion> \<alpha> r \<Longrightarrow> (\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> r)" using sumregions_def by simp
-  then show "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<Longrightarrow> m \<sqsubseteq> r" by simp
+  thus "m \<in> \<alpha> \<and> \<Squnion> \<alpha> r \<Longrightarrow> m \<sqsubseteq> r" by simp
 qed
 
 (* 3 marks *)
@@ -253,7 +253,7 @@ theorem overlaps_refl:
 proof -
   have 0: "{x} \<noteq> {} \<Longrightarrow> \<exists>z. \<Squnion> {x} z" using sumregions_def A2 by blast
   from 0 have 1: "{x} \<noteq> {} \<Longrightarrow> \<Squnion> {x} x" using sumregions_def A2 by fastforce
-  then show "x \<frown> x" using "1" sumregions_def by auto
+  thus "x \<frown> x" using "1" sumregions_def by auto
 qed
 
 (* 1 mark *)
@@ -293,7 +293,7 @@ proof -
   have 1: "y \<sqsubseteq> x \<Longrightarrow> r y y" using assms sumregions_def by fastforce
   from 1 have 2: "p \<sqsubseteq> x \<Longrightarrow> r y p" using sumregions_def assms by force
   have 3: "?\<beta> = ?\<alpha>" using 0 sumregions_def using 1 assms(3) by fastforce
-  then show "\<Squnion> ?\<beta> x" using 0 by simp
+  thus "\<Squnion> ?\<beta> x" using 0 by simp
 qed
 
 (* 1 mark *)
@@ -324,7 +324,6 @@ proof -
       from 1 have 2: "\<not>(\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" using A1 assms by blast
       thus "False" using b by simp
     qed
-    moreover
     have 3: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w \<Longrightarrow> False"
     proof -
       assume c: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w"
@@ -332,7 +331,7 @@ proof -
       have 4: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
       thus "False" using c disjoint_def overlaps_refl by blast
     qed
-    ultimately show "False" using A2 sumregions_def 0 3 all_has_partof a mereology_axioms by sledgehammer
+    thus "False" using A2 sumregions_def 0 3 all_has_partof a mereology_axioms by sledgehammer
   qed
   thus "x = y" by sledgehammer
 oops
