@@ -391,8 +391,11 @@ next
 next
   show "\<And>x y z. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> z\<rbrakk> \<Longrightarrow> x \<sqsubseteq> z" using A1 by blast
 next
-  show "\<And>x y. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> x\<rbrakk> \<Longrightarrow> x = y" using sumregions_def A2 A1 sum_one_is_self singletonD by sledgehammer
-    sorry
+  show "\<And>x y. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> x\<rbrakk> \<Longrightarrow> x = y"
+  proof -
+    have 0: "\<Squnion> {x} x" using A2 sum_one_is_self by auto
+    thus "\<And>x y. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> x\<rbrakk> \<Longrightarrow> x = y" using sumregions_def A2 by auto
+  qed
 qed
 
 end
