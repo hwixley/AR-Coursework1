@@ -274,10 +274,10 @@ qed
 
 (* 1 mark *)
 theorem sum_parts_eq:
-  "\<Squnion> {p. p \<sqsubseteq> x} y \<Longrightarrow> y = x"
+  "\<Squnion> {p. p \<sqsubseteq> x} x"
 proof -
-  assume a: "\<Squnion> {p. p \<sqsubseteq> x} y"
-  thus "\<Squnion> {p. p \<sqsubseteq> x} y \<Longrightarrow> y = x" using sumregions_def A2 by auto
+  have 0: "\<exists>y. \<Squnion> {p. p \<sqsubseteq> x} y" using A2 all_has_partof by auto
+  thus "\<Squnion> {p. p \<sqsubseteq> x} x" using UNIV_eq_I sumregions_def by fastforce
 qed
 
 (* 2 marks *)
@@ -331,10 +331,16 @@ proof -
       have 4: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
       thus "False" using c disjoint_def overlaps_refl by blast
     qed
-    thus "False" using A2 sumregions_def 0 3 all_has_partof a mereology_axioms by sledgehammer
+    have 5: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> \<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
+      using overlaps_refl sumregions_def A2 sum_parts_eq assms all_has_partof by sledgehammer
+    from 3 5 have 6: "False \<Longrightarrow> \<not> \<Squnion> {z. z \<sqsubseteq> x} y" using A2 sumregions_def all_has_partof sum_parts_eq by blast
+    from 6 have 7: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False" using assms A2 sumregions_def by sledgehammer
+    from 6 show "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False" 
+      using assms A1 A2 sumregions_def 0 3 all_has_partof a mereology_axioms overlaps_def sum_parts_eq by sledgehammer
   qed
   thus "x = y" by sledgehammer
-oops
+  show ?thesis sorry
+  oops
 
 (* 4 marks *)
 theorem sum_all_with_parts_overlapping:
@@ -353,47 +359,38 @@ qed
 
 (* 2 marks *)
 theorem sum_one_is_self:
-  "\<Squnion> {x} y \<Longrightarrow> y = x"
+  "\<Squnion> {x} x"
 proof -
-  assume a: "\<Squnion> {x} y"
-  show "y = x" using a sumregions_def by auto
+  have 0: "\<exists>y. \<Squnion> {x} y" using A2 by simp
+  thus "\<Squnion> {x} x" using A2 sumregions_def by fastforce
 qed
 
 (* 2 marks *)
 theorem sum_all_with_parts_overlapping_self:
-  "\<Squnion> {z. \<forall>p. p \<sqsubseteq> z \<and> p \<frown> x} y \<Longrightarrow> y = x"
-  using A2 sumregions_def by auto
+  "\<Squnion> {z. \<forall>p. p \<sqsubseteq> z \<and> p \<frown> x} x"
+  using sumregions_def sum_one_is_self by auto
 
 (* 4 marks *)
 theorem proper_have_nonoverlapping_proper:
   assumes "s \<sqsubset> r"
   shows "\<exists>z. z \<sqsubset> r \<and> z \<asymp> s"
 proof -
-  have 0: "\<Squnion> {z. z \<sqsubset> r} y" using A2 sumregions_def properpartof_def using assms by auto
+  have 0: "\<Squnion> {z. z \<sqsubset> r} y" using A2 sumregions_def properpartof_def assms by auto
   from 0 have 1: "y \<noteq> s" using sumregions_def properpartof_def by auto
-  from 1 have 2: "{z. z \<sqsubset> r} \<noteq> {s}" using 0 sum_one_is_self by auto
+  from 1 have 2: "{z. z \<sqsubset> r} \<noteq> {s}" using 0 sum_one_is_self A2' by fastforce
   thus "\<exists>z. z \<sqsubset> r \<and> z \<asymp> s" using 0 properpartof_def sumregions_def by auto
-oops
+qed
 
 (* 1 mark *)
 sublocale parthood_partial_order: order "(\<sqsubseteq>)" "(\<sqsubset>)"
 proof
   show "\<And>x y. x \<sqsubset> y = (x \<sqsubseteq> y \<and> \<not> y \<sqsubseteq> x)" using properpartof_def A2 sumregions_def by auto
 next
-  show "\<And>x. x \<sqsubseteq> x"
-  proof -
-    have 0: "\<Squnion> {x} x" using A2 sum_one_is_self by auto
-    from 0 have 1: "y \<in> {x} \<Longrightarrow>  y \<sqsubseteq> x" using sumregions_def by simp
-    thus "\<And>x. x \<sqsubseteq> x" using sumregions_def 0 by force
-  qed
+  show "\<And>x. x \<sqsubseteq> x" using sumregions_def sum_one_is_self by simp
 next
   show "\<And>x y z. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> z\<rbrakk> \<Longrightarrow> x \<sqsubseteq> z" using A1 by blast
 next
-  show "\<And>x y. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> x\<rbrakk> \<Longrightarrow> x = y"
-  proof -
-    have 0: "\<Squnion> {x} x" using A2 sum_one_is_self by auto
-    thus "\<And>x y. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> x\<rbrakk> \<Longrightarrow> x = y" using sumregions_def A2 by auto
-  qed
+  show "\<And>x y. \<lbrakk>x \<sqsubseteq> y; y \<sqsubseteq> x\<rbrakk> \<Longrightarrow> x = y" using both_partof_eq by simp
 qed
 
 end
@@ -511,7 +508,7 @@ theorem proper_have_nonoverlapping_proper_sphere:
   shows "\<exists>\<degree>p. p \<sqsubset> r \<and> p \<asymp> s"
 proof -
   assume a: "s \<sqsubset> r"
-  thus "\<exists>\<degree>p. p \<sqsubset> r \<and> p \<asymp> s"
+  thus "\<exists>\<degree>p. p \<sqsubset> r \<and> p \<asymp> s" by sledgehammer
 oops
 
 (* 4 marks *)
