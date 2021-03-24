@@ -314,15 +314,15 @@ theorem both_partof_eq:
   shows "x = y"
 proof -
   assume "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
-  have "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False"
-  proof -
+  have "\<Squnion> {z. z \<sqsubseteq> x} y"
+  proof (rule ccontr)
     assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
-    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y \<Longrightarrow> False"
-    proof -
-      assume b: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
+    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
+    proof (rule ccontr)
+      assume b: "\<nexists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
+      then obtain w where "\<not> (w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" by blast
       have 1: "w \<sqsubseteq> x \<Longrightarrow> w \<sqsubseteq> y" using assms A1 by blast
-      from 1 have 2: "\<not>(\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" using A1 assms by blast
-      thus "False" using b by simp
+      thus "False" using b sumregions_def sum_parts_eq a by auto
     qed
     have 3: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w \<Longrightarrow> False"
     proof -
@@ -331,16 +331,41 @@ proof -
       have 4: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
       thus "False" using c disjoint_def overlaps_refl by blast
     qed
-    have 5: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> \<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
-      using overlaps_refl sumregions_def A2 sum_parts_eq assms all_has_partof by sledgehammer
-    from 3 5 have 6: "False \<Longrightarrow> \<not> \<Squnion> {z. z \<sqsubseteq> x} y" using A2 sumregions_def all_has_partof sum_parts_eq by blast
-    from 6 have 7: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False" using assms A2 sumregions_def by sledgehammer
-    from 6 show "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False" 
-      using assms A1 A2 sumregions_def 0 3 all_has_partof a mereology_axioms overlaps_def sum_parts_eq by sledgehammer
+
+    thus "False" 
+      using assms A1 A2 sumregions_def 0 3 a A2' overlaps_def sum_parts_eq by sledgehammer
   qed
   thus "x = y" by sledgehammer
   show ?thesis sorry
   oops
+(*  assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
+  shows "x = y"
+proof -
+  assume "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
+  have "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False"
+  proof -
+    assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
+    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y \<Longrightarrow> False"
+    proof -
+      assume b: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
+      have 1: "w \<sqsubseteq> x \<Longrightarrow> w \<sqsubseteq> y" using assms A1 by blast
+      from 1 have 2: "\<not>(\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" using A1 assms by blast
+      thus "False" using b sumregions_def sum_parts_eq a by au
+    qed
+    have 3: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w \<Longrightarrow> False"
+    proof -
+      assume c: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w"
+      fix w
+      have 4: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
+      thus "False" using c disjoint_def overlaps_refl by blast
+    qed
+
+    thus "False" 
+      using assms A1 A2 sumregions_def 0 3 a A2' overlaps_def sum_parts_eq by sledgehammer
+  qed
+  thus "x = y" by sledgehammer
+  show ?thesis sorry
+  oops*)
 
 (* 4 marks *)
 theorem sum_all_with_parts_overlapping:
