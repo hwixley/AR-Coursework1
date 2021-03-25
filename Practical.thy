@@ -310,35 +310,7 @@ theorem sum_parts_of_one_eq:
 
 (* 5 marks *)
 theorem both_partof_eq:
-  assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
-  shows "x = y"
-proof -
-  assume "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
-  have "\<Squnion> {z. z \<sqsubseteq> x} y"
-  proof (rule ccontr)
-    assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
-    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
-    proof (rule ccontr)
-      assume b: "\<nexists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
-      then obtain w where "\<not> (w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" by blast
-      have 1: "w \<sqsubseteq> x \<Longrightarrow> w \<sqsubseteq> y" using assms A1 by blast
-      thus "False" using b sumregions_def sum_parts_eq a by auto
-    qed
-    have 3: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w \<Longrightarrow> False"
-    proof -
-      assume c: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w"
-      fix w
-      have 4: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
-      thus "False" using c disjoint_def overlaps_refl by blast
-    qed
-
-    thus "False" 
-      using assms A1 A2 sumregions_def 0 3 a A2' overlaps_def sum_parts_eq by sledgehammer
-  qed
-  thus "x = y" by sledgehammer
-  show ?thesis sorry
-  oops
-(*  assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
+assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
   shows "x = y"
 proof -
   assume "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
@@ -350,7 +322,7 @@ proof -
       assume b: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
       have 1: "w \<sqsubseteq> x \<Longrightarrow> w \<sqsubseteq> y" using assms A1 by blast
       from 1 have 2: "\<not>(\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" using A1 assms by blast
-      thus "False" using b sumregions_def sum_parts_eq a by au
+      thus "False" using b sumregions_def sum_parts_eq a by auto
     qed
     have 3: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w \<Longrightarrow> False"
     proof -
@@ -359,13 +331,39 @@ proof -
       have 4: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
       thus "False" using c disjoint_def overlaps_refl by blast
     qed
-
-    thus "False" 
+    (*have 5: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False" using sumregions_def A2 assms sum_parts_eq A1 A2' by sledgehammer*)
+    from 0 3 show "False" 
       using assms A1 A2 sumregions_def 0 3 a A2' overlaps_def sum_parts_eq by sledgehammer
   qed
   thus "x = y" by sledgehammer
   show ?thesis sorry
-  oops*)
+
+(*assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
+  shows "x = y"
+proof -
+  assume "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
+  have "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False"
+  proof -
+    assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
+    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y \<Longrightarrow> False"
+    proof -
+      assume b: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
+      have 1: "w \<sqsubseteq> x \<Longrightarrow> w \<sqsubseteq> y" using assms A1 by blast
+      from 1 have 2: "\<not>(\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" using A1 assms by blast
+      thus "False" using b sumregions_def sum_parts_eq a by auto
+    qed
+    have 3: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w \<Longrightarrow> False"
+    proof -
+      assume c: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w"
+      fix w
+      have 4: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
+      thus "False" using c disjoint_def overlaps_refl by blast
+    qed
+    thus "False" 
+      using assms A1 A2 sumregions_def 0 3 a A2' overlaps_def sum_parts_eq by sledgehammer
+  qed
+  thus "x = y" by sledgehammer
+  show ?thesis sorry*)
 
 (* 4 marks *)
 theorem sum_all_with_parts_overlapping:
@@ -503,11 +501,8 @@ begin
 (* 2 marks *)
 thm equiv_def
 theorem conc_equiv:
-  "equiv a b" by sledgehammer
-
-  (*"a \<odot> a \<and> (a \<odot> b \<longrightarrow> b \<odot> a) \<and> (a \<odot> b \<and> b \<odot> c \<longrightarrow> a \<odot> c)"
-  by sledgehammer*)
-oops
+  "equiv concentric_def a" 
+  using A7 A9 sumregions_def sum_parts_eq parthood_partial_order.antisym concentric_def by fastforce
 
 (* 6 marks *)
 theorem region_is_spherical_sum:
