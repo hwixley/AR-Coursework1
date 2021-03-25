@@ -314,33 +314,34 @@ theorem both_partof_eq:
 assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
   shows "x = y"
 proof -
-  assume "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
-  have "\<Squnion> {z. z \<sqsubseteq> x} y"
+  have 0: "\<Squnion> {z. z \<sqsubseteq> x} y"
   proof (rule ccontr)
     assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
-    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y \<Longrightarrow> False"
+    have 1: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y \<Longrightarrow> False"
     proof -
       assume b: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
-      have 1: "w \<sqsubseteq> x \<Longrightarrow> w \<sqsubseteq> y" using assms A1 by blast
-      from 1 have 2: "\<not>(\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" using A1 assms by blast
+      have 2: "w \<sqsubseteq> x \<Longrightarrow> w \<sqsubseteq> y" using assms A1 by blast
+      from 2 have 3: "\<not>(\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" using A1 assms by blast
       thus "False" using b sumregions_def sum_parts_eq a by auto
     qed
-    have 3: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w \<Longrightarrow> False"
+    have 4: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w \<Longrightarrow> False"
     proof -
       assume c: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w"
       fix w
-      have 4: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
+      have 5: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
       thus "False" using c disjoint_def overlaps_refl by blast
     qed
 
-    have 5: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False \<Longrightarrow> \<Squnion> {z. z \<sqsubseteq> x} y" 
-      using sumregions_def A2 assms sum_parts_eq A1 A2' a by blast
+    have 6: "\<Squnion> {x} x \<Longrightarrow> \<exists>z. \<Squnion> {p. p \<sqsubseteq> x} z" using sum_parts_eq by blast
+    from 6 have 7: "\<Squnion> {p. p \<sqsubseteq> x} z \<Longrightarrow> z = y" 
+      using A1 A2 A2' sum_parts_of_one_eq assms sumregions_def sum_parts_eq by meson (**)
     thus "False" 
-      using notE assms A1 A2 sumregions_def 0 3 a A2' overlaps_def sum_parts_eq UNIV_def UNIV_eq_I 
-        overlaps_refl overlaps_sym empty_def by sledgehammer
+      using sumregions_def a A2' overlaps_def sum_parts_eq by (metis (full_types)) (**)
   qed
-  thus "x = y" by sledgehammer
-  show ?thesis sorry
+  have 9: "\<Squnion> {z. z \<sqsubseteq> x} x" using sumregions_def sum_parts_eq assms 0 by blast
+  from 0 9 have 10: "\<Squnion> {z. z \<sqsubseteq> x} x \<and> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> x = y" using sum_parts_eq sumregions_def A2' by blast
+  thus "x = y" using 0 9 by blast
+qed
 
 (*assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
   shows "x = y"
