@@ -505,7 +505,7 @@ theorem conc_equiv:
   using A7 A9 sumregions_def sum_parts_eq parthood_partial_order.antisym concentric_def by fastforce
 
 (* 6 marks *)
-theorem region_is_spherical_sum:
+theorem region_is_spherical_sum:  
   "\<Squnion> {p. p \<sqsubseteq> x \<and> sphere p} x"
 proof -
   have 0: "\<exists>y. \<Squnion> {p. p \<sqsubseteq> x \<and> sphere p} y" 
@@ -515,8 +515,9 @@ qed
 
 (* 1 mark *)
 theorem region_spherical_interior:
-  "undefined \<Longrightarrow> oninterior s r"
-oops
+  "oninterior s r \<Longrightarrow> \<exists>\<degree>s'. s' \<sqsubseteq> r \<and> oninterior s s'"
+  using oninterior_def concentric_def by auto
+
 
 (* 2 marks *)
 (*Only A8 is needed for this proof as...*)
