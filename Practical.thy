@@ -547,9 +547,9 @@ theorem not_sphere_spherical_parts_gt1:
       and "\<not> sphere r"
     shows "\<exists>\<degree>a b. a \<noteq> b \<and> a \<sqsubseteq> r \<and> b \<sqsubseteq> r" 
 proof -
-  have 0: "\<Squnion> {r} r \<Longrightarrow> False"
+  have 0: "\<nexists>x. \<Squnion> {x} r"
     using A9 assms(2) parthood_partial_order.antisym sum_parts_eq sumregions_def by blast
-  thus "\<exists>\<degree>a b. a \<noteq> b \<and> a \<sqsubseteq> r \<and> b \<sqsubseteq> r" using sum_one_is_self by auto
+  thus "\<exists>\<degree>a b. a \<noteq> b \<and> a \<sqsubseteq> r \<and> b \<sqsubseteq> r" using sum_one_is_self sumregions_def by simp
 qed
 
 end
