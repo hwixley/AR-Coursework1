@@ -553,9 +553,7 @@ lemma
   assumes T4: "\<And>x y. \<lbrakk>sphere x; sphere y\<rbrakk> \<Longrightarrow> x y \<doteq> y x"
       and A9: "\<exists>\<degree>s. s \<sqsubseteq> r"
     shows False
-proof -
-  
-oops
+  by (meson A9 T4 sumregions_def equidistant3_def equidistant4_def onboundary_def sum_all_with_parts_overlapping_self)
 
 (* 3 marks *)
 (*The issue was that the geometry definitions treated these arguments as regions and not spheres. 
