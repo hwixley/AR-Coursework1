@@ -315,8 +315,8 @@ assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
   shows "x = y"
 proof -
   assume "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
-  have "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False"
-  proof -
+  have "\<Squnion> {z. z \<sqsubseteq> x} y"
+  proof (rule ccontr)
     assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
     have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y \<Longrightarrow> False"
     proof -
@@ -332,9 +332,12 @@ proof -
       have 4: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
       thus "False" using c disjoint_def overlaps_refl by blast
     qed
-    (*have 5: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False" using sumregions_def A2 assms sum_parts_eq A1 A2' by sledgehammer*)
-    from 0 3 show "False" 
-      using assms A1 A2 sumregions_def 0 3 a A2' overlaps_def sum_parts_eq by sledgehammer
+
+    have 5: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False \<Longrightarrow> \<Squnion> {z. z \<sqsubseteq> x} y" 
+      using sumregions_def A2 assms sum_parts_eq A1 A2' a by blast
+    thus "False" 
+      using notE assms A1 A2 sumregions_def 0 3 a A2' overlaps_def sum_parts_eq UNIV_def UNIV_eq_I 
+        overlaps_refl overlaps_sym empty_def by sledgehammer
   qed
   thus "x = y" by sledgehammer
   show ?thesis sorry
@@ -532,14 +535,22 @@ theorem equal_interiors_equal_regions:
 theorem proper_have_nonoverlapping_proper_sphere:
   assumes "s \<sqsubset> r"
   shows "\<exists>\<degree>p. p \<sqsubset> r \<and> p \<asymp> s" 
-  using properpartof_def sumregions_def assms sum_one_is_self by auto
+proof -
+  have "s \<sqsubset> r \<Longrightarrow> \<exists>\<degree>p. p \<sqsubseteq> r \<and> p \<asymp> s"
+    using parthood_partial_order.leD sum_one_is_self sumregions_def by auto
+  thus "\<exists>\<degree>p. p \<sqsubset> r \<and> p \<asymp> s" using properpartof_def sumregions_def assms sum_one_is_self by simp
+qed
 
 (* 4 marks *)
 theorem not_sphere_spherical_parts_gt1:
   assumes "\<Squnion> {p. p \<sqsubseteq> r \<and> sphere p} r"
       and "\<not> sphere r"
     shows "\<exists>\<degree>a b. a \<noteq> b \<and> a \<sqsubseteq> r \<and> b \<sqsubseteq> r" 
-  using A9 assms sumregions_def by simp
+proof -
+  have 0: "\<Squnion> {r} r \<Longrightarrow> False"
+    using A9 assms(2) parthood_partial_order.antisym sum_parts_eq sumregions_def by blast
+  thus "\<exists>\<degree>a b. a \<noteq> b \<and> a \<sqsubseteq> r \<and> b \<sqsubseteq> r" using sum_one_is_self by auto
+qed
 
 end
 
@@ -556,8 +567,8 @@ lemma
   by (meson A9 T4 sumregions_def equidistant3_def equidistant4_def onboundary_def sum_all_with_parts_overlapping_self)
 
 (* 3 marks *)
-(*The issue was that the geometry definitions treated these arguments as regions and not spheres. 
-I fixed it by adding sphere conditions using conjunctions to the definition.*)
+(* The issue was that the geometry definitions treated these arguments as regions and not spheres. 
+I fixed it by adding sphere conditions using conjunctions to the definition. *)
 definition equidistant3' :: "'region \<Rightarrow> 'region \<Rightarrow> 'region \<Rightarrow> bool" where
   "equidistant3' x y z \<equiv> \<exists>\<degree>z'. z' \<odot> z \<and> onboundary y z' \<and> onboundary x z' \<and> sphere x \<and> sphere y \<and> sphere z"
 
@@ -576,17 +587,18 @@ definition tworeg_partof :: "two_reg \<Rightarrow> two_reg \<Rightarrow> bool" (
 
 (* 12 marks *)
 interpretation mereology "(\<sqsubseteq>)"
-proof
+proof 
   show "\<forall>x y z. x \<sqsubseteq> y \<and> y \<sqsubseteq> z \<longrightarrow> x \<sqsubseteq> z"
   proof -
     have 0: "x \<sqsubseteq> y \<and> y \<sqsubseteq> x \<longrightarrow> x \<sqsubseteq> x" using two_reg.exhaust tworeg_partof_def by auto
-    thus "\<forall>x y z. x \<sqsubseteq> y \<and> y \<sqsubseteq> z \<longrightarrow> x \<sqsubseteq> z" using impI by sledgehammer
-    oops
+    thus "\<forall>x y z. x \<sqsubseteq> y \<and> y \<sqsubseteq> z \<longrightarrow> x \<sqsubseteq> z" using impI tworeg_partof_def by auto
   qed
 next
   show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. partof.sumregions (\<sqsubseteq>) \<alpha> x)"
   proof -
-    sorry
+    have 0: "\<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. partof.sumregions (\<sqsubseteq>) \<alpha> x)" using allI by sledgehammer
+      from 0 have 1: ""
+      show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. partof.sumregions (\<sqsubseteq>) \<alpha> x)" by sledgehammer
 next
   show "\<forall>\<alpha> x y. partof.sumregions (\<sqsubseteq>) \<alpha> x \<and> partof.sumregions (\<sqsubseteq>) \<alpha> y \<longrightarrow> x = y"
     sorry
