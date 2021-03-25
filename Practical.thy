@@ -511,8 +511,12 @@ oops
 
 (* 6 marks *)
 theorem region_is_spherical_sum:
-  "\<Squnion> {p. p \<sqsubseteq> x \<and> sphere p} y \<Longrightarrow> y = x"
-  by (simp add: parthood_partial_order.antisym partof.sumregions_def)
+  "\<Squnion> {p. p \<sqsubseteq> x \<and> sphere p} x"
+proof -
+  have 0: "\<exists>y. \<Squnion> {p. p \<sqsubseteq> x \<and> sphere p} y" 
+    using A7 A9 sumregions_def concentric_def parthood_partial_order.antisym sum_all_with_parts_overlapping_self by auto
+  thus "\<Squnion> {p. p \<sqsubseteq> x \<and> sphere p} x" using sumregions_def by auto
+qed
 
 (* 1 mark *)
 theorem region_spherical_interior:
