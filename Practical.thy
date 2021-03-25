@@ -518,14 +518,14 @@ theorem region_spherical_interior:
   "oninterior s r \<Longrightarrow> \<exists>\<degree>s'. s' \<sqsubseteq> r \<and> oninterior s s'"
   using oninterior_def concentric_def by auto
 
-
 (* 2 marks *)
-(*Only A8 is needed for this proof as...*)
+(* Only A8 is needed for this proof as it defines parthood using region interiors (if every 
+internal region of x is also a part of y it means that x must be a part of y), we can therefore use 
+this to prove x = y using region interiors by obtaining x \<sqsubseteq> y and y \<sqsubseteq> x from our assumption *)
 theorem equal_interiors_equal_regions:
-  assumes "{p. p \<sqsubseteq> x \<and> sphere p \<and> oninterior p x} = {p. p \<sqsubseteq> y \<and> sphere p \<and> oninterior p y}"
+  assumes "oninterior p x \<longleftrightarrow> oninterior p y"
   shows "x = y"
-  using sumregions_def A8 oninterior_def concentric_def by sledgehammer
-oops
+  using A8 sum_one_is_self sumregions_def by simp
 
 (* 2 marks *)
 theorem proper_have_nonoverlapping_proper_sphere:
@@ -537,8 +537,9 @@ theorem proper_have_nonoverlapping_proper_sphere:
 theorem not_sphere_spherical_parts_gt1:
   assumes "\<Squnion> \<alpha> r"
       and "\<not> sphere r"
-  shows "\<exists>\<degree>a b. a \<noteq> b \<and> a \<sqsubseteq> r \<and> b \<sqsubseteq> r"
-oops
+    shows "\<exists>\<degree>a b. a \<noteq> b \<and> a \<sqsubseteq> r \<and> b \<sqsubseteq> r"
+proof -
+  have 0: 
 
 end
 
