@@ -306,7 +306,8 @@ theorem overlap_has_partof_overlap:
 theorem sum_parts_of_one_eq:
   assumes "\<Squnion> {x} x"
   shows "\<Squnion> {p. p \<sqsubseteq> x} x"
-  using assms sumregions_def by auto
+  using sum_relation_is_same' [where x = "x" and y = "x" and r = "\<lambda>x y. y \<sqsubseteq> x"] 
+  by (simp add: sum_parts_eq)
 
 (* 5 marks *)
 theorem both_partof_eq:
