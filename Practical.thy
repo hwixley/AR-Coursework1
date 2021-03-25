@@ -536,11 +536,10 @@ theorem proper_have_nonoverlapping_proper_sphere:
 
 (* 4 marks *)
 theorem not_sphere_spherical_parts_gt1:
-  assumes "\<Squnion> \<alpha> r"
+  assumes "\<Squnion> {p. p \<sqsubseteq> r \<and> sphere p} r"
       and "\<not> sphere r"
-    shows "\<exists>\<degree>a b. a \<noteq> b \<and> a \<sqsubseteq> r \<and> b \<sqsubseteq> r"
-proof -
-  have 0: 
+    shows "\<exists>\<degree>a b. a \<noteq> b \<and> a \<sqsubseteq> r \<and> b \<sqsubseteq> r" 
+  using A9 assms sumregions_def by simp
 
 end
 
