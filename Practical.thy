@@ -522,19 +522,16 @@ theorem region_spherical_interior:
 (* 2 marks *)
 (*Only A8 is needed for this proof as...*)
 theorem equal_interiors_equal_regions:
-  assumes "{p. p \<sqsubseteq> x \<and> sphere p} = {p. p \<sqsubseteq> y \<and> sphere p}"
+  assumes "{p. p \<sqsubseteq> x \<and> sphere p \<and> oninterior p x} = {p. p \<sqsubseteq> y \<and> sphere p \<and> oninterior p y}"
   shows "x = y"
-  using sumregions_def A2 mereology_axioms mereology_def by auto
+  using sumregions_def A8 oninterior_def concentric_def by sledgehammer
 oops
 
 (* 2 marks *)
 theorem proper_have_nonoverlapping_proper_sphere:
   assumes "s \<sqsubset> r"
-  shows "\<exists>\<degree>p. p \<sqsubset> r \<and> p \<asymp> s"
-proof -
-  assume a: "s \<sqsubset> r"
-  thus "\<exists>\<degree>p. p \<sqsubset> r \<and> p \<asymp> s" by sledgehammer
-oops
+  shows "\<exists>\<degree>p. p \<sqsubset> r \<and> p \<asymp> s" 
+  using properpartof_def sumregions_def assms sum_one_is_self by auto
 
 (* 4 marks *)
 theorem not_sphere_spherical_parts_gt1:
