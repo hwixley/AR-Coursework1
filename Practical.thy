@@ -572,7 +572,7 @@ datatype two_reg = Left | Right | Both
 
 (* 2 marks *)
 definition tworeg_partof :: "two_reg \<Rightarrow> two_reg \<Rightarrow> bool" (infix "\<sqsubseteq>" 100) where
-  "x \<sqsubseteq> y \<equiv> x = Both \<or> y = Both \<or> (y = Right \<and> x = Right) \<or> (y = Left \<and> x = Left)"
+  "x \<sqsubseteq> y \<equiv> x = y \<or> y = Both"
 
 (* 12 marks *)
 interpretation mereology "(\<sqsubseteq>)"
