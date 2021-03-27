@@ -332,42 +332,10 @@ proof -
       have 5: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
       thus "False" using c disjoint_def overlaps_refl by blast
     qed
-    moreover
-    have 6: "\<Squnion> {z. z \<sqsubseteq> x} y = \<Squnion> {y} y" using sumregions_def a sum_parts_eq by auto
-    ultimately show "False" 
-      using sumregions_def a A2' overlaps_def sum_parts_eq by simp
+    ultimately show "False" using sumregions_def a overlaps_def sum_parts_eq by simp
   qed
-  have 9: "\<Squnion> {z. z \<sqsubseteq> x} x" using sumregions_def sum_parts_eq assms 0 by blast
-  from 0 9 have 10: "\<Squnion> {z. z \<sqsubseteq> x} x \<and> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> x = y" using sum_parts_eq sumregions_def A2' by blast
-  thus "x = y" using 0 9 by blast
+  thus "x = y" using 0 A2' sum_parts_eq by blast
 qed
-
-(*assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
-  shows "x = y"
-proof -
-  assume "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
-  have "\<not> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> False"
-  proof -
-    assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
-    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y \<Longrightarrow> False"
-    proof -
-      assume b: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
-      have 1: "w \<sqsubseteq> x \<Longrightarrow> w \<sqsubseteq> y" using assms A1 by blast
-      from 1 have 2: "\<not>(\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" using A1 assms by blast
-      thus "False" using b sumregions_def sum_parts_eq a by auto
-    qed
-    have 3: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w \<Longrightarrow> False"
-    proof -
-      assume c: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w"
-      fix w
-      have 4: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
-      thus "False" using c disjoint_def overlaps_refl by blast
-    qed
-    thus "False" 
-      using assms A1 A2 sumregions_def 0 3 a A2' overlaps_def sum_parts_eq by sledgehammer
-  qed
-  thus "x = y" by sledgehammer
-  show ?thesis sorry*)
 
 (* 4 marks *)
 theorem sum_all_with_parts_overlapping:
@@ -585,7 +553,7 @@ datatype two_reg = Left | Right | Both
 definition tworeg_partof :: "two_reg \<Rightarrow> two_reg \<Rightarrow> bool" (infix "\<sqsubseteq>" 100) where
   "x \<sqsubseteq> y \<equiv> x = y \<or> y = Both"
 
-abbreviation sumregions2 :: "two_reg set \<Rightarrow> two_reg \<Rightarrow> bool" ("\<Squnion> _ _") where
+abbreviation sumregions_abbrev :: "two_reg set \<Rightarrow> two_reg \<Rightarrow> bool" ("\<Squnion> _ _") where
 "\<Squnion> \<alpha> x \<equiv> partof.sumregions (\<sqsubseteq>) \<alpha> x"
 
 (* 12 marks *)
@@ -598,19 +566,17 @@ proof
   qed
 next
   show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)" 
-    using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sorry
-  (*proof -
-    have 0: "\<alpha> = {x} \<Longrightarrow> \<Squnion> \<alpha> x"
-    proof -
-(*(\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> x) \<and> (\<forall>y. y \<sqsubseteq> x \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z))*)
-      assume a: "\<alpha> = {x}"
-      have 1: "\<forall>y. y \<in> {x} \<and> y \<sqsubseteq> x" sorry
-        using a two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
-    qed
-    have 1: "\<alpha> = {Left} \<Longrightarrow> \<Squnion> \<alpha> x" using a by auto
-    thus "\<And>\<alpha>. \<alpha> \<noteq> {} \<Longrightarrow> \<exists>x. \<Squnion> \<alpha> x"
-      using 0 1 two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
-  qed*)
+    (*using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sorry*)
+  proof -
+    have "\<alpha> = {b} \<Longrightarrow> \<Squnion> \<alpha> b" 
+      using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
+    let ?\<beta> = "{two_reg.Left, two_reg.Right, two_reg.Both}"
+    have 0: "\<Squnion> {} z \<Longrightarrow> False" by (simp add: partof.sumregions_def)
+    have 1: "\<Squnion> {z} x \<Longrightarrow> z = x" by (metis partof.sumregions_def singletonD)
+    have 2: "\<alpha> \<noteq> {} \<Longrightarrow> \<alpha> \<subset> ?\<beta>" by sledgehammer
+    thus "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)" 
+      using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
+  qed
 next
   show "\<forall>\<alpha> x y. \<Squnion> \<alpha> x \<and> \<Squnion> \<alpha> y \<longrightarrow> x = y"
   by (metis (full_types) partof.sumregions_def tworeg_partof_def)
