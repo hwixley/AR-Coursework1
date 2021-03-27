@@ -506,8 +506,8 @@ begin
 (* 2 marks *)
 thm equiv_def
 theorem conc_equiv:
-  "equiv concentric_def a" 
-  using A7 A9 sumregions_def sum_parts_eq parthood_partial_order.antisym concentric_def by fastforce
+  "equiv {z. sphere z} concentric_def"
+  using A7 A9 concentric_def parthood_partial_order.antisym sum_all_with_parts_overlapping_self sumregions_def by auto
 
 (* 6 marks *)
 theorem region_is_spherical_sum:  
@@ -586,6 +586,9 @@ datatype two_reg = Left | Right | Both
 definition tworeg_partof :: "two_reg \<Rightarrow> two_reg \<Rightarrow> bool" (infix "\<sqsubseteq>" 100) where
   "x \<sqsubseteq> y \<equiv> x = y \<or> y = Both"
 
+abbreviation sumregions :: "two_reg set \<Rightarrow> two_reg \<Rightarrow> bool" ("\<Squnion> _ _") where
+"\<Squnion> \<alpha> x \<equiv> partof.sumregions (\<sqsubseteq>) \<alpha> x"
+
 (* 12 marks *)
 interpretation mereology "(\<sqsubseteq>)"
 proof 
@@ -595,13 +598,20 @@ proof
     thus "\<forall>x y z. x \<sqsubseteq> y \<and> y \<sqsubseteq> z \<longrightarrow> x \<sqsubseteq> z" using impI tworeg_partof_def by auto
   qed
 next
-  show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. partof.sumregions (\<sqsubseteq>) \<alpha> x)"
+  show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)"
   proof -
-    have 0: "\<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. partof.sumregions (\<sqsubseteq>) \<alpha> x)" using allI by sledgehammer
-      from 0 have 1: ""
-      show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. partof.sumregions (\<sqsubseteq>) \<alpha> x)" by sledgehammer
+    have 0: "\<alpha> = {x} \<Longrightarrow> \<Squnion> \<alpha> x"
+    proof -
+(*(\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> x) \<and> (\<forall>y. y \<sqsubseteq> x \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z))*)
+      assume a: "\<alpha> = {x}"
+      have 1: "\<forall>y. y \<in> {x} \<and> y \<sqsubseteq> x" 
+        using a two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
+    qed
+    have 1: "\<alpha> = {Left} \<Longrightarrow> \<Squnion> \<alpha> x" using a by auto
+    thus "\<And>\<alpha>. \<alpha> \<noteq> {} \<Longrightarrow> \<exists>x. \<Squnion> \<alpha> x" 
+      using 0 1 two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
 next
-  show "\<forall>\<alpha> x y. partof.sumregions (\<sqsubseteq>) \<alpha> x \<and> partof.sumregions (\<sqsubseteq>) \<alpha> y \<longrightarrow> x = y"
+  show "\<forall>\<alpha> x y. \<Squnion> \<alpha> x \<and> \<Squnion> \<alpha> y \<longrightarrow> x = y"
     sorry
 oops
 

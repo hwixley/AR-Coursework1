@@ -306,39 +306,44 @@ theorem overlap_has_partof_overlap:
 theorem sum_parts_of_one_eq:
   assumes "\<Squnion> {x} x"
   shows "\<Squnion> {p. p \<sqsubseteq> x} x"
-  using assms sumregions_def by auto
+  using sum_relation_is_same' [where x = "x" and y = "x" and r = "\<lambda>x y. y \<sqsubseteq> x"] 
+  by (simp add: sum_parts_eq)
 
 (* 5 marks *)
 theorem both_partof_eq:
-  assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
+assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
   shows "x = y"
 proof -
-  assume "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
-  have "\<Squnion> {z. z \<sqsubseteq> x} y"
+  have 0: "\<Squnion> {z. z \<sqsubseteq> x} y"
   proof (rule ccontr)
     assume a: "\<not> \<Squnion> {z. z \<sqsubseteq> x} y"
-    have 0: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
-    proof (rule ccontr)
-      assume b: "\<nexists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
-      then obtain w where "\<not> (w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" by blast
-      have 1: "w \<sqsubseteq> x \<Longrightarrow> w \<sqsubseteq> y" using assms A1 by blast
+    have 1: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y \<Longrightarrow> False"
+    proof -
+      assume b: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
+      have 2: "w \<sqsubseteq> x \<Longrightarrow> w \<sqsubseteq> y" using assms A1 by blast
+      from 2 have 3: "\<not>(\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" using A1 assms by blast
       thus "False" using b sumregions_def sum_parts_eq a by auto
     qed
-    have 3: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w \<Longrightarrow> False"
+    have 4: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w \<Longrightarrow> False"
     proof -
       assume c: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w"
       fix w
-      have 4: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
+      have 5: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
       thus "False" using c disjoint_def overlaps_refl by blast
     qed
 
+    have 6: "\<Squnion> {x} x \<Longrightarrow> \<exists>z. \<Squnion> {p. p \<sqsubseteq> x} z" using sum_parts_eq by blast
+    from 6 have 7: "\<Squnion> {p. p \<sqsubseteq> x} z \<Longrightarrow> z = y" 
+      using A1 A2 A2' sum_parts_of_one_eq assms sumregions_def sum_parts_eq by meson (**)
     thus "False" 
-      using assms A1 A2 sumregions_def 0 3 a A2' overlaps_def sum_parts_eq by sledgehammer
+      using sumregions_def a A2' overlaps_def sum_parts_eq by (metis (full_types)) (**)
   qed
-  thus "x = y" by sledgehammer
-  show ?thesis sorry
-  oops
-(*  assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
+  have 9: "\<Squnion> {z. z \<sqsubseteq> x} x" using sumregions_def sum_parts_eq assms 0 by blast
+  from 0 9 have 10: "\<Squnion> {z. z \<sqsubseteq> x} x \<and> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> x = y" using sum_parts_eq sumregions_def A2' by blast
+  thus "x = y" using 0 9 by blast
+qed
+
+(*assumes "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
   shows "x = y"
 proof -
   assume "x \<sqsubseteq> y \<and> y \<sqsubseteq> x"
@@ -350,7 +355,7 @@ proof -
       assume b: "\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y"
       have 1: "w \<sqsubseteq> x \<Longrightarrow> w \<sqsubseteq> y" using assms A1 by blast
       from 1 have 2: "\<not>(\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" using A1 assms by blast
-      thus "False" using b sumregions_def sum_parts_eq a by au
+      thus "False" using b sumregions_def sum_parts_eq a by auto
     qed
     have 3: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w \<Longrightarrow> False"
     proof -
@@ -359,13 +364,11 @@ proof -
       have 4: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
       thus "False" using c disjoint_def overlaps_refl by blast
     qed
-
     thus "False" 
       using assms A1 A2 sumregions_def 0 3 a A2' overlaps_def sum_parts_eq by sledgehammer
   qed
   thus "x = y" by sledgehammer
-  show ?thesis sorry
-  oops*)
+  show ?thesis sorry*)
 
 (* 4 marks *)
 theorem sum_all_with_parts_overlapping:
@@ -503,45 +506,52 @@ begin
 (* 2 marks *)
 thm equiv_def
 theorem conc_equiv:
-  "equiv a b" by sledgehammer
-
-  (*"a \<odot> a \<and> (a \<odot> b \<longrightarrow> b \<odot> a) \<and> (a \<odot> b \<and> b \<odot> c \<longrightarrow> a \<odot> c)"
-  by sledgehammer*)
-oops
+  "equiv concentric_def a" 
+  using A7 A9 sumregions_def sum_parts_eq parthood_partial_order.antisym concentric_def by fastforce
 
 (* 6 marks *)
-theorem region_is_spherical_sum:
-  "\<Squnion> {p. p \<sqsubseteq> x \<and> sphere p} y \<Longrightarrow> y = x"
-  by (simp add: parthood_partial_order.antisym partof.sumregions_def)
+theorem region_is_spherical_sum:  
+  "\<Squnion> {p. p \<sqsubseteq> x \<and> sphere p} x"
+proof -
+  have 0: "\<exists>y. \<Squnion> {p. p \<sqsubseteq> x \<and> sphere p} y" 
+    using A7 A9 sumregions_def concentric_def parthood_partial_order.antisym sum_all_with_parts_overlapping_self by auto
+  thus "\<Squnion> {p. p \<sqsubseteq> x \<and> sphere p} x" using sumregions_def by auto
+qed
 
 (* 1 mark *)
 theorem region_spherical_interior:
-  "undefined \<Longrightarrow> oninterior s r"
-oops
+  "oninterior s r \<Longrightarrow> \<exists>\<degree>s'. s' \<sqsubseteq> r \<and> oninterior s s'"
+  using oninterior_def concentric_def by auto
 
 (* 2 marks *)
-(*Only A8 is needed for this proof as...*)
+(* Only A8 is needed for this proof as it defines parthood using region interiors (if every 
+internal region of x is also a part of y it means that x must be a part of y), we can therefore use 
+this to prove x = y using region interiors by obtaining x \<sqsubseteq> y and y \<sqsubseteq> x from our assumption *)
 theorem equal_interiors_equal_regions:
-  assumes "{p. p \<sqsubseteq> x \<and> sphere p} = {p. p \<sqsubseteq> y \<and> sphere p}"
+  assumes "oninterior p x \<longleftrightarrow> oninterior p y"
   shows "x = y"
-  using sumregions_def A2 mereology_axioms mereology_def by auto
-oops
+  using A8 sum_one_is_self sumregions_def by simp
 
 (* 2 marks *)
 theorem proper_have_nonoverlapping_proper_sphere:
   assumes "s \<sqsubset> r"
-  shows "\<exists>\<degree>p. p \<sqsubset> r \<and> p \<asymp> s"
+  shows "\<exists>\<degree>p. p \<sqsubset> r \<and> p \<asymp> s" 
 proof -
-  assume a: "s \<sqsubset> r"
-  thus "\<exists>\<degree>p. p \<sqsubset> r \<and> p \<asymp> s" by sledgehammer
-oops
+  have "s \<sqsubset> r \<Longrightarrow> \<exists>\<degree>p. p \<sqsubseteq> r \<and> p \<asymp> s"
+    using parthood_partial_order.leD sum_one_is_self sumregions_def by auto
+  thus "\<exists>\<degree>p. p \<sqsubset> r \<and> p \<asymp> s" using properpartof_def sumregions_def assms sum_one_is_self by simp
+qed
 
 (* 4 marks *)
 theorem not_sphere_spherical_parts_gt1:
-  assumes "\<Squnion> \<alpha> r"
+  assumes "\<Squnion> {p. p \<sqsubseteq> r \<and> sphere p} r"
       and "\<not> sphere r"
-  shows "\<exists>\<degree>a b. a \<noteq> b \<and> a \<sqsubseteq> r \<and> b \<sqsubseteq> r"
-oops
+    shows "\<exists>\<degree>a b. a \<noteq> b \<and> a \<sqsubseteq> r \<and> b \<sqsubseteq> r" 
+proof -
+  have 0: "\<Squnion> {x} r \<Longrightarrow> \<not> sphere x"
+    using A9 assms(2) parthood_partial_order.antisym sum_parts_eq sumregions_def by blast
+  thus "\<exists>\<degree>a b. a \<noteq> b \<and> a \<sqsubseteq> r \<and> b \<sqsubseteq> r" using sum_one_is_self sumregions_def assms(1) by auto
+qed
 
 end
 
@@ -555,13 +565,11 @@ lemma
   assumes T4: "\<And>x y. \<lbrakk>sphere x; sphere y\<rbrakk> \<Longrightarrow> x y \<doteq> y x"
       and A9: "\<exists>\<degree>s. s \<sqsubseteq> r"
     shows False
-proof -
-  
-oops
+  by (meson A9 T4 sumregions_def equidistant3_def equidistant4_def onboundary_def sum_all_with_parts_overlapping_self)
 
 (* 3 marks *)
-(*The issue was that the geometry definitions treated these arguments as regions and not spheres. 
-I fixed it by adding sphere conditions using conjunctions to the definition.*)
+(* The issue was that the geometry definitions treated these arguments as regions and not spheres. 
+I fixed it by adding sphere conditions using conjunctions to the definition. *)
 definition equidistant3' :: "'region \<Rightarrow> 'region \<Rightarrow> 'region \<Rightarrow> bool" where
   "equidistant3' x y z \<equiv> \<exists>\<degree>z'. z' \<odot> z \<and> onboundary y z' \<and> onboundary x z' \<and> sphere x \<and> sphere y \<and> sphere z"
 
@@ -576,21 +584,22 @@ datatype two_reg = Left | Right | Both
 
 (* 2 marks *)
 definition tworeg_partof :: "two_reg \<Rightarrow> two_reg \<Rightarrow> bool" (infix "\<sqsubseteq>" 100) where
-  "x \<sqsubseteq> y \<equiv> x = Both \<or> y = Both \<or> (y = Right \<and> x = Right) \<or> (y = Left \<and> x = Left)"
+  "x \<sqsubseteq> y \<equiv> x = y \<or> y = Both"
 
 (* 12 marks *)
 interpretation mereology "(\<sqsubseteq>)"
-proof
+proof 
   show "\<forall>x y z. x \<sqsubseteq> y \<and> y \<sqsubseteq> z \<longrightarrow> x \<sqsubseteq> z"
   proof -
     have 0: "x \<sqsubseteq> y \<and> y \<sqsubseteq> x \<longrightarrow> x \<sqsubseteq> x" using two_reg.exhaust tworeg_partof_def by auto
-    thus "\<forall>x y z. x \<sqsubseteq> y \<and> y \<sqsubseteq> z \<longrightarrow> x \<sqsubseteq> z" using impI by sledgehammer
-    oops
+    thus "\<forall>x y z. x \<sqsubseteq> y \<and> y \<sqsubseteq> z \<longrightarrow> x \<sqsubseteq> z" using impI tworeg_partof_def by auto
   qed
 next
   show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. partof.sumregions (\<sqsubseteq>) \<alpha> x)"
   proof -
-    sorry
+    have 0: "\<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. partof.sumregions (\<sqsubseteq>) \<alpha> x)" using allI by sledgehammer
+      from 0 have 1: ""
+      show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. partof.sumregions (\<sqsubseteq>) \<alpha> x)" by sledgehammer
 next
   show "\<forall>\<alpha> x y. partof.sumregions (\<sqsubseteq>) \<alpha> x \<and> partof.sumregions (\<sqsubseteq>) \<alpha> y \<longrightarrow> x = y"
     sorry
