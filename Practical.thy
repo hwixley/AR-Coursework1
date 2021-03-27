@@ -532,7 +532,17 @@ lemma
   assumes T4: "\<And>x y. \<lbrakk>sphere x; sphere y\<rbrakk> \<Longrightarrow> x y \<doteq> y x"
       and A9: "\<exists>\<degree>s. s \<sqsubseteq> r"
     shows False
-  by (meson A9 T4 sumregions_def equidistant3_def equidistant4_def onboundary_def sum_all_with_parts_overlapping_self)
+proof -
+  have 0: "\<forall>x y. x y \<doteq> y x \<Longrightarrow> False" using equidistant3_def equidistant4_def onboundary_def by auto
+  moreover
+  have 1: "\<exists>\<degree>s. s \<sqsubseteq> r \<Longrightarrow> False"
+  proof -
+    assume a: "\<exists>\<degree>x. x \<sqsubseteq> r"
+    have "\<And>x y. x \<sqsubseteq> y" using sum_all_with_parts_overlapping_self sumregions_def by blast
+    then show ?thesis using a by (metis (full_types) T4 calculation parthood_partial_order.antisym)
+  qed
+  ultimately show "False" using A9 by blast
+qed
 
 (* 3 marks *)
 (* The issue was that the geometry definitions treated these arguments as regions and not spheres. 
