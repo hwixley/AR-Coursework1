@@ -324,6 +324,7 @@ proof -
       from 2 have 3: "\<not>(\<exists>w. w \<sqsubseteq> x \<and> \<not> w \<sqsubseteq> y)" using A1 assms by blast
       thus "False" using b sumregions_def sum_parts_eq a by auto
     qed
+    moreover
     have 4: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w \<Longrightarrow> False"
     proof -
       assume c: "\<exists>w. \<forall>v. v \<sqsubseteq> x \<and> w \<sqsubseteq> y \<and> v \<asymp> w"
@@ -331,12 +332,10 @@ proof -
       have 5: "y \<sqsubseteq> x \<Longrightarrow> y \<asymp> w" using c disjoint_def overlaps_refl by blast
       thus "False" using c disjoint_def overlaps_refl by blast
     qed
-
-    have 6: "\<Squnion> {x} x \<Longrightarrow> \<exists>z. \<Squnion> {p. p \<sqsubseteq> x} z" using sum_parts_eq by blast
-    from 6 have 7: "\<Squnion> {p. p \<sqsubseteq> x} z \<Longrightarrow> z = y" 
-      using A1 A2 A2' sum_parts_of_one_eq assms sumregions_def sum_parts_eq by meson (**)
-    thus "False" 
-      using sumregions_def a A2' overlaps_def sum_parts_eq by (metis (full_types)) (**)
+    moreover
+    have 6: "\<Squnion> {z. z \<sqsubseteq> x} y = \<Squnion> {y} y" using sumregions_def a sum_parts_eq by auto
+    ultimately show "False" 
+      using sumregions_def a A2' overlaps_def sum_parts_eq by simp
   qed
   have 9: "\<Squnion> {z. z \<sqsubseteq> x} x" using sumregions_def sum_parts_eq assms 0 by blast
   from 0 9 have 10: "\<Squnion> {z. z \<sqsubseteq> x} x \<and> \<Squnion> {z. z \<sqsubseteq> x} y \<Longrightarrow> x = y" using sum_parts_eq sumregions_def A2' by blast
@@ -506,7 +505,7 @@ begin
 (* 2 marks *)
 thm equiv_def
 theorem conc_equiv:
-  "equiv {z. sphere z} concentric_def"
+  "equiv {z. sphere z} concentric_def" by sledgehammer
   using A7 A9 concentric_def parthood_partial_order.antisym sum_all_with_parts_overlapping_self sumregions_def by auto
 
 (* 6 marks *)
