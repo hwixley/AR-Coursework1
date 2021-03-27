@@ -585,7 +585,7 @@ datatype two_reg = Left | Right | Both
 definition tworeg_partof :: "two_reg \<Rightarrow> two_reg \<Rightarrow> bool" (infix "\<sqsubseteq>" 100) where
   "x \<sqsubseteq> y \<equiv> x = y \<or> y = Both"
 
-abbreviation sumregions :: "two_reg set \<Rightarrow> two_reg \<Rightarrow> bool" ("\<Squnion> _ _") where
+abbreviation sumregions2 :: "two_reg set \<Rightarrow> two_reg \<Rightarrow> bool" ("\<Squnion> _ _") where
 "\<Squnion> \<alpha> x \<equiv> partof.sumregions (\<sqsubseteq>) \<alpha> x"
 
 (* 12 marks *)
@@ -597,22 +597,24 @@ proof
     thus "\<forall>x y z. x \<sqsubseteq> y \<and> y \<sqsubseteq> z \<longrightarrow> x \<sqsubseteq> z" using impI tworeg_partof_def by auto
   qed
 next
-  show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)"
-  proof -
+  show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)" 
+    using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sorry
+  (*proof -
     have 0: "\<alpha> = {x} \<Longrightarrow> \<Squnion> \<alpha> x"
     proof -
 (*(\<forall>y. y \<in> \<alpha> \<and>  y \<sqsubseteq> x) \<and> (\<forall>y. y \<sqsubseteq> x \<longrightarrow> (\<exists>z. z \<in> \<alpha> \<and> y \<frown> z))*)
       assume a: "\<alpha> = {x}"
-      have 1: "\<forall>y. y \<in> {x} \<and> y \<sqsubseteq> x" 
+      have 1: "\<forall>y. y \<in> {x} \<and> y \<sqsubseteq> x" sorry
         using a two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
     qed
     have 1: "\<alpha> = {Left} \<Longrightarrow> \<Squnion> \<alpha> x" using a by auto
-    thus "\<And>\<alpha>. \<alpha> \<noteq> {} \<Longrightarrow> \<exists>x. \<Squnion> \<alpha> x" 
+    thus "\<And>\<alpha>. \<alpha> \<noteq> {} \<Longrightarrow> \<exists>x. \<Squnion> \<alpha> x"
       using 0 1 two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
+  qed*)
 next
   show "\<forall>\<alpha> x y. \<Squnion> \<alpha> x \<and> \<Squnion> \<alpha> y \<longrightarrow> x = y"
-    sorry
-oops
+  by (metis (full_types) partof.sumregions_def tworeg_partof_def)
+qed
 
 
 end
