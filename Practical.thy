@@ -346,8 +346,8 @@ proof -
   proof (rule ccontr)
     assume a: "\<not> \<Squnion> {y} x"
     have 0: "\<not> y \<sqsubseteq> x" using A2' a assms sumregions_def by fastforce
-    have 1: "\<exists>w. w \<sqsubseteq> x \<and> w \<asymp> y" using "0" assms sumregions_def by blast
-    thus "False" using "0" assms sumregions_def by blast
+    have 1: "\<exists>w. w \<sqsubseteq> x \<and> w \<asymp> y" using 0 assms sumregions_def by blast
+    thus "False" using 0 assms sumregions_def by blast
   qed
   thus "\<Squnion> {y} x" by simp
 qed
@@ -578,7 +578,7 @@ next
   show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)" 
     (*using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sorry*)
   proof -
-    have "\<alpha> = {b} \<Longrightarrow> \<Squnion> \<alpha> b" 
+    have "\<Squnion> {b} b" 
       using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
     let ?\<beta> = "{two_reg.Left, two_reg.Right, two_reg.Both}"
     have 0: "\<Squnion> {} z \<Longrightarrow> False" by (simp add: partof.sumregions_def)
