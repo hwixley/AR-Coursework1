@@ -587,11 +587,10 @@ next
   show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)" 
   proof -
     have 1: "\<alpha> \<noteq> {} \<Longrightarrow> \<exists>y x. y \<in> \<alpha> \<and> y \<sqsubseteq> x"
-      using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by auto
+      using tworeg_partof_def by auto
     have 2: "\<alpha> \<noteq> {} \<Longrightarrow> \<exists>y x z. y \<in> \<alpha> \<and> y \<sqsubseteq> x \<and> z \<in> \<alpha> \<and> y \<frown> z"
-      using two_reg.exhaust tworeg_partof_def partof.overlaps_def by (metis "1")
-    thus "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)" 
-      using impI impE 2 1 two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sorry
+      using tworeg_partof_def partof.overlaps_def by (metis 1)
+    thus "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)" by sorry
   qed
 next
   show "\<forall>\<alpha> x y. \<Squnion> \<alpha> x \<and> \<Squnion> \<alpha> y \<longrightarrow> x = y"
