@@ -346,8 +346,8 @@ proof -
   proof (rule ccontr)
     assume a: "\<not> \<Squnion> {y} x"
     have 0: "\<not> y \<sqsubseteq> x" using A2' a assms sumregions_def by fastforce
-    have 1: "\<exists>w. w \<sqsubseteq> x \<and> w \<asymp> y" using "0" assms sumregions_def by blast
-    thus "False" using "0" assms sumregions_def by blast
+    have 1: "\<exists>w. w \<sqsubseteq> x \<and> w \<asymp> y" using 0 assms sumregions_def by blast
+    thus "False" using 0 assms sumregions_def by blast
   qed
   thus "\<Squnion> {y} x" by simp
 qed
@@ -473,8 +473,18 @@ begin
 (* 2 marks *)
 thm equiv_def
 theorem conc_equiv:
-  "equiv {z. sphere z} concentric_def" by sledgehammer
-  using A7 A9 concentric_def parthood_partial_order.antisym sum_all_with_parts_overlapping_self sumregions_def by auto
+  "equiv {z. sphere z} {(x,y). x \<odot> y}"
+proof -
+  let ?\<alpha> = "{(x,y). x \<odot> y}"
+  have 0: "refl_on (Collect sphere) ?\<alpha>"
+    using concentric_def parthood_partial_order.antisym sum_all_with_parts_overlapping_self sumregions_def A7 A9 by fastforce
+  have 1: "sym ?\<alpha>" 
+    using concentric_def A7 parthood_partial_order.antisym sum_all_with_parts_overlapping_self sumregions_def 0 A9 by fastforce
+  have 2: "trans ?\<alpha>"
+    using A7 concentric_def parthood_partial_order.antisym sum_all_with_parts_overlapping_self sumregions_def 0 A9 by fastforce
+  thus "equiv {z. sphere z} {(x,y). x \<odot> y}" using equiv_def 0 1 by blast
+qed
+
 
 (* 6 marks *)
 theorem region_is_spherical_sum:  
@@ -533,14 +543,10 @@ lemma
       and A9: "\<exists>\<degree>s. s \<sqsubseteq> r"
     shows False
 proof -
-  have 0: "\<forall>x y. x y \<doteq> y x \<Longrightarrow> False" using equidistant3_def equidistant4_def onboundary_def by auto
+  have 0: "\<And>x y. \<lbrakk>sphere x; sphere y\<rbrakk> \<Longrightarrow> x y \<doteq> y x \<Longrightarrow> False" 
+    using equidistant3_def equidistant4_def onboundary_def by auto
   moreover
-  have 1: "\<exists>\<degree>s. s \<sqsubseteq> r \<Longrightarrow> False"
-  proof -
-    assume a: "\<exists>\<degree>x. x \<sqsubseteq> r"
-    have "\<And>x y. x \<sqsubseteq> y" using sum_all_with_parts_overlapping_self sumregions_def by blast
-    then show ?thesis using a by (metis (full_types) T4 calculation parthood_partial_order.antisym)
-  qed
+  have 1: "\<exists>\<degree>s. s \<sqsubseteq> r \<Longrightarrow> False" using T4 calculation by blast
   ultimately show "False" using A9 by blast
 qed
 
@@ -577,15 +583,12 @@ proof
 next
   show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)" 
     (*using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sorry*)
-  proof -
-    have "\<alpha> = {b} \<Longrightarrow> \<Squnion> \<alpha> b" 
-      using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
-    let ?\<beta> = "{two_reg.Left, two_reg.Right, two_reg.Both}"
-    have 0: "\<Squnion> {} z \<Longrightarrow> False" by (simp add: partof.sumregions_def)
-    have 1: "\<Squnion> {z} x \<Longrightarrow> z = x" by (metis partof.sumregions_def singletonD)
-    have 2: "\<alpha> \<noteq> {} \<Longrightarrow> \<alpha> \<subset> ?\<beta>" by sledgehammer
+  proof (rule allI, rule impI, unfold partof.sumregions_def)
+    have 0: "\<alpha> \<noteq> {} \<and> y \<in> \<alpha> \<Longrightarrow> \<exists>x. y \<sqsubseteq> x"
+      using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by auto
+    have 1: "\<alpha> \<noteq> {} \<and> y \<in> \<alpha> \<and> y \<sqsubseteq> x \<Longrightarrow> \<exists>z. z \<in> \<alpha> \<and> \<Squnion> y z"
     thus "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)" 
-      using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
+      using impI impE 0 1 two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
   qed
 next
   show "\<forall>\<alpha> x y. \<Squnion> \<alpha> x \<and> \<Squnion> \<alpha> y \<longrightarrow> x = y"

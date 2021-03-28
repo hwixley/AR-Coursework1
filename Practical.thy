@@ -572,6 +572,9 @@ definition tworeg_partof :: "two_reg \<Rightarrow> two_reg \<Rightarrow> bool" (
 abbreviation sumregions_abbrev :: "two_reg set \<Rightarrow> two_reg \<Rightarrow> bool" ("\<Squnion> _ _") where
 "\<Squnion> \<alpha> x \<equiv> partof.sumregions (\<sqsubseteq>) \<alpha> x"
 
+abbreviation overlaps_abbrev :: "two_reg \<Rightarrow> two_reg \<Rightarrow> bool" ("_ \<frown>  _") where
+"x \<frown> y \<equiv> partof.overlaps (\<sqsubseteq>) x y"
+
 (* 12 marks *)
 interpretation mereology "(\<sqsubseteq>)"
 proof 
@@ -582,20 +585,17 @@ proof
   qed
 next
   show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)" 
-    (*using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sorry*)
-  proof (rule allI, rule impI)
-    have 0: "\<alpha> \<noteq> {} \<Longrightarrow> \<exists>x. \<Squnion> \<alpha> x"
-    proof -
-      assume a: "\<alpha> \<noteq> {}"
-      have 1: "\<alpha> \<noteq> {} \<Longrightarrow> \<Squnion> \<alpha> Left \<or> \<Squnion> \<alpha> Right \<or> \<Squnion> \<alpha> Both" 
-      using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
-    have 1: "\<And>\<alpha>. \<alpha> \<noteq> {} \<Longrightarrow> \<exists>x. \<Squnion> \<alpha> x" by simp
-    thus "\<And>\<alpha>. \<alpha> \<noteq> {} \<Longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)" 
-      using impI impE 0 1 two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
+  proof -
+    have 1: "\<alpha> \<noteq> {} \<Longrightarrow> \<exists>y x. y \<in> \<alpha> \<and> y \<sqsubseteq> x"
+      using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by auto
+    have 2: "\<alpha> \<noteq> {} \<Longrightarrow> \<exists>y x z. y \<in> \<alpha> \<and> y \<sqsubseteq> x \<and> z \<in> \<alpha> \<and> y \<frown> z"
+      using two_reg.exhaust tworeg_partof_def partof.overlaps_def by (metis "1")
+    thus "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)" 
+      using impI impE 2 1 two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sorry
   qed
 next
   show "\<forall>\<alpha> x y. \<Squnion> \<alpha> x \<and> \<Squnion> \<alpha> y \<longrightarrow> x = y"
-  by (metis (full_types) partof.sumregions_def tworeg_partof_def)
+    by (metis (full_types) partof.sumregions_def tworeg_partof_def)
 qed
 
 
