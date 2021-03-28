@@ -473,8 +473,18 @@ begin
 (* 2 marks *)
 thm equiv_def
 theorem conc_equiv:
-  "equiv {z. sphere z} concentric_def"
-  using A7 A9 concentric_def parthood_partial_order.antisym sum_all_with_parts_overlapping_self sumregions_def by auto
+  "equiv {z. sphere z} {(x,y). x \<odot> y}"
+proof -
+  let ?\<alpha> = "{(x,y). x \<odot> y}"
+  have 0: "refl_on (Collect sphere) ?\<alpha>"
+    using concentric_def parthood_partial_order.antisym sum_all_with_parts_overlapping_self sumregions_def A7 A9 by fastforce
+  have 1: "sym ?\<alpha>" 
+    using concentric_def A7 parthood_partial_order.antisym sum_all_with_parts_overlapping_self sumregions_def 0 A9 by fastforce
+  have 2: "trans ?\<alpha>"
+    using A7 concentric_def parthood_partial_order.antisym sum_all_with_parts_overlapping_self sumregions_def 0 A9 by fastforce
+  thus "equiv {z. sphere z} {(x,y). x \<odot> y}" using equiv_def 0 1 by blast
+qed
+
 
 (* 6 marks *)
 theorem region_is_spherical_sum:  
