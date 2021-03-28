@@ -473,7 +473,7 @@ begin
 (* 2 marks *)
 thm equiv_def
 theorem conc_equiv:
-  "equiv {z. sphere z} concentric_def" by sledgehammer
+  "equiv {z. sphere z} concentric_def"
   using A7 A9 concentric_def parthood_partial_order.antisym sum_all_with_parts_overlapping_self sumregions_def by auto
 
 (* 6 marks *)
