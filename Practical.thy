@@ -533,13 +533,14 @@ lemma
       and A9: "\<exists>\<degree>s. s \<sqsubseteq> r"
     shows False
 proof -
-  have 0: "\<forall>x y. x y \<doteq> y x \<Longrightarrow> False" using equidistant3_def equidistant4_def onboundary_def by auto
+  have 0: "\<And>x y. \<lbrakk>sphere x; sphere y\<rbrakk> \<Longrightarrow> x y \<doteq> y x \<Longrightarrow> False" 
+    using equidistant3_def equidistant4_def onboundary_def by auto
   moreover
   have 1: "\<exists>\<degree>s. s \<sqsubseteq> r \<Longrightarrow> False"
   proof -
-    assume a: "\<exists>\<degree>x. x \<sqsubseteq> r"
-    have "\<And>x y. x \<sqsubseteq> y" using sum_all_with_parts_overlapping_self sumregions_def by blast
-    then show ?thesis using a by (metis (full_types) T4 calculation parthood_partial_order.antisym)
+    assume a: "\<exists>\<degree>s. s \<sqsubseteq> r"
+    have "\<And>w z. w \<sqsubseteq> z" using sum_all_with_parts_overlapping_self sumregions_def by blast
+    thus ?thesis using a by (metis (full_types) T4 calculation)
   qed
   ultimately show "False" using A9 by blast
 qed
@@ -577,15 +578,15 @@ proof
 next
   show "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)" 
     (*using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sorry*)
-  proof -
-    have "\<Squnion> {b} b" 
+  proof (rule allI, rule impI)
+    have 0: "\<alpha> \<noteq> {} \<Longrightarrow> \<exists>x. \<Squnion> \<alpha> x"
+    proof -
+      assume a: "\<alpha> \<noteq> {}"
+      have 1: "\<alpha> \<noteq> {} \<Longrightarrow> \<Squnion> \<alpha> Left \<or> \<Squnion> \<alpha> Right \<or> \<Squnion> \<alpha> Both" 
       using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
-    let ?\<beta> = "{two_reg.Left, two_reg.Right, two_reg.Both}"
-    have 0: "\<Squnion> {} z \<Longrightarrow> False" by (simp add: partof.sumregions_def)
-    have 1: "\<Squnion> {z} x \<Longrightarrow> z = x" by (metis partof.sumregions_def singletonD)
-    have 2: "\<alpha> \<noteq> {} \<Longrightarrow> \<alpha> \<subset> ?\<beta>" by sledgehammer
-    thus "\<forall>\<alpha>. \<alpha> \<noteq> {} \<longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)" 
-      using two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
+    have 1: "\<And>\<alpha>. \<alpha> \<noteq> {} \<Longrightarrow> \<exists>x. \<Squnion> \<alpha> x" by simp
+    thus "\<And>\<alpha>. \<alpha> \<noteq> {} \<Longrightarrow> (\<exists>x. \<Squnion> \<alpha> x)" 
+      using impI impE 0 1 two_reg.exhaust tworeg_partof_def partof.sumregions_def partof.overlaps_def by sledgehammer
   qed
 next
   show "\<forall>\<alpha> x y. \<Squnion> \<alpha> x \<and> \<Squnion> \<alpha> y \<longrightarrow> x = y"
