@@ -536,12 +536,7 @@ proof -
   have 0: "\<And>x y. \<lbrakk>sphere x; sphere y\<rbrakk> \<Longrightarrow> x y \<doteq> y x \<Longrightarrow> False" 
     using equidistant3_def equidistant4_def onboundary_def by auto
   moreover
-  have 1: "\<exists>\<degree>s. s \<sqsubseteq> r \<Longrightarrow> False"
-  proof -
-    assume a: "\<exists>\<degree>s. s \<sqsubseteq> r"
-    have "\<And>w z. w \<sqsubseteq> z" using sum_all_with_parts_overlapping_self sumregions_def by blast
-    thus ?thesis using a by (metis (full_types) T4 calculation)
-  qed
+  have 1: "\<exists>\<degree>s. s \<sqsubseteq> r \<Longrightarrow> False" using T4 calculation by blast
   ultimately show "False" using A9 by blast
 qed
 
